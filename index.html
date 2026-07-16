@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pétalos & Flores - Floristería</title>
+  <title>Irma's Flowers - Floristería en Sacramento</title>
   <!-- Font Awesome (íconos) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <!-- Google Fonts -->
@@ -17,7 +17,7 @@
     <div class="container nav-container">
       <div class="logo">
         <i class="fas fa-seedling"></i>
-        <span>Pétalos & Flores</span>
+        <span>Irma's Flowers</span>
       </div>
       <nav>
         <ul class="nav-links">
@@ -42,8 +42,8 @@
   <section id="inicio" class="hero">
     <div class="hero-overlay"></div>
     <div class="container hero-content">
-      <h1>Flores que hablan <br /> al corazón</h1>
-      <p>Descubre nuestra colección de arreglos frescos, hechos con amor para cada ocasión especial.</p>
+      <h1>Flores frescas <br />para cada ocasión</h1>
+      <p>En Irma's Flowers creamos arreglos únicos con amor y dedicación. ¡Haz tu pedido hoy!</p>
       <a href="#productos" class="btn-primary">Ver productos</a>
     </div>
   </section>
@@ -66,17 +66,17 @@
         <div class="offer-card">
           <i class="fas fa-gift"></i>
           <h3>20% de descuento</h3>
-          <p>En tu primer pedido usando el código <strong>FLOR20</strong></p>
+          <p>En tu primer pedido usando el código <strong>IRMA20</strong></p>
         </div>
         <div class="offer-card">
           <i class="fas fa-truck"></i>
           <h3>Envío gratis</h3>
-          <p>En pedidos superiores a $50.000</p>
+          <p>En pedidos superiores a $75</p>
         </div>
         <div class="offer-card">
           <i class="fas fa-calendar-alt"></i>
-          <h3>Suscríbete</h3>
-          <p>Recibe flores frescas cada mes con un 15% de descuento</p>
+          <h3>Suscripción mensual</h3>
+          <p>Recibe flores frescas cada mes con 15% de descuento</p>
         </div>
       </div>
     </div>
@@ -89,12 +89,12 @@
       <div class="testimonial-grid">
         <div class="testimonial-card">
           <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-          <p>"Las flores llegaron frescas y hermosas. El ramo fue perfecto para el aniversario."</p>
+          <p>"Las flores llegaron frescas y hermosas. El ramo fue perfecto para el aniversario de mis padres."</p>
           <h4>— María G.</h4>
         </div>
         <div class="testimonial-card">
           <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-          <p>"Excelente servicio al cliente y una variedad increíble. ¡Mi lugar favorito para comprar flores!"</p>
+          <p>"Excelente servicio al cliente y una variedad increíble. ¡Mi lugar favorito para comprar flores en Sacramento!"</p>
           <h4>— Carlos R.</h4>
         </div>
         <div class="testimonial-card">
@@ -112,9 +112,9 @@
       <h2 class="section-title">Contáctanos</h2>
       <div class="contact-wrapper">
         <div class="contact-info">
-          <p><i class="fas fa-map-marker-alt"></i> Calle 123 #45-67, Bogotá</p>
-          <p><i class="fas fa-phone-alt"></i> +57 300 123 4567</p>
-          <p><i class="fas fa-envelope"></i> hola@petalosflores.com</p>
+          <p><i class="fas fa-map-marker-alt"></i> 2201 Northgate Blvd, Sacramento, CA 95833</p>
+          <p><i class="fas fa-phone-alt"></i> (916) 559-1808</p>
+          <p><i class="fas fa-envelope"></i> info@irmasflowers.com</p>
           <div class="social-icons">
             <a href="#"><i class="fab fa-instagram"></i></a>
             <a href="#"><i class="fab fa-facebook"></i></a>
@@ -131,10 +131,48 @@
     </div>
   </section>
 
+  <!-- ========== MODAL CARRITO ========== -->
+  <div class="cart-modal" id="cartModal">
+    <div class="cart-modal-content">
+      <span class="cart-close" id="cartClose">&times;</span>
+      <h2>🛒 Tu pedido</h2>
+      <div id="cartItems">
+        <p class="cart-empty">El carrito está vacío</p>
+      </div>
+      <div class="cart-total">
+        <strong>Total: </strong><span id="cartTotal">$0</span>
+      </div>
+      <button class="btn-primary" id="checkoutBtn" style="width:100%; margin-top:20px;">
+        Finalizar pedido
+      </button>
+    </div>
+  </div>
+
+  <!-- ========== MODAL FORMULARIO PEDIDO ========== -->
+  <div class="cart-modal" id="orderModal">
+    <div class="cart-modal-content">
+      <span class="cart-close" id="orderClose">&times;</span>
+      <h2>📝 Completa tu pedido</h2>
+      <form id="orderForm">
+        <input type="text" id="orderName" placeholder="Tu nombre completo" required />
+        <input type="tel" id="orderPhone" placeholder="Teléfono (ej: 9165551234)" required />
+        <input type="email" id="orderEmail" placeholder="Correo electrónico" required />
+        <textarea id="orderAddress" placeholder="Dirección de entrega" rows="3" required></textarea>
+        <textarea id="orderNotes" placeholder="Notas adicionales (opcional)" rows="2"></textarea>
+        <div id="orderSummary" style="background:#f5ede9; padding:15px; border-radius:12px; margin:15px 0;">
+          <!-- Aquí se mostrará el resumen del pedido -->
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%;">
+          Enviar pedido 📩
+        </button>
+      </form>
+    </div>
+  </div>
+
   <!-- ========== FOOTER ========== -->
   <footer>
     <div class="container">
-      <p>&copy; 2025 Pétalos & Flores. Hecho con <i class="fas fa-heart"></i> para ti.</p>
+      <p>&copy; 2025 Irma's Flowers - Sacramento, CA. Hecho con <i class="fas fa-heart"></i> para ti.</p>
     </div>
   </footer>
 
