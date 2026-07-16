@@ -250,7 +250,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 
   // ========== OPCIÓN 2: ENVIAR POR WHATSAPP ==========
   // Número de Irma's Flowers (formato internacional sin + ni espacios)
-  const telefonoWhatsApp = '19165591808'; // Código de país 1 + número
+  const telefonoWhatsApp = '19165413044'; // Código de país 1 + número
   const whatsappLink = `https://wa.me/${telefonoWhatsApp}?text=${encodeURIComponent(mensaje)}`;
 
   // Mostrar opciones al usuario
