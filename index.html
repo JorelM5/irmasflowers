@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pétalos & Flores - Floristería</title>
+  <!-- Font Awesome (íconos) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ========== HEADER / NAVBAR ========== -->
+  <header>
+    <div class="container nav-container">
+      <div class="logo">
+        <i class="fas fa-seedling"></i>
+        <span>Pétalos & Flores</span>
+      </div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#productos">Productos</a></li>
+          <li><a href="#ofertas">Ofertas</a></li>
+          <li><a href="#testimonios">Testimonios</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+        <div class="cart-icon">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-count">0</span>
+        </div>
+        <div class="menu-toggle" id="menuToggle">
+          <i class="fas fa-bars"></i>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========== HERO ========== -->
+  <section id="inicio" class="hero">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <h1>Flores que hablan <br /> al corazón</h1>
+      <p>Descubre nuestra colección de arreglos frescos, hechos con amor para cada ocasión especial.</p>
+      <a href="#productos" class="btn-primary">Ver productos</a>
+    </div>
+  </section>
+
+  <!-- ========== PRODUCTOS ========== -->
+  <section id="productos" class="section">
+    <div class="container">
+      <h2 class="section-title">Nuestros productos</h2>
+      <div class="product-grid" id="productGrid">
+        <!-- Los productos se generan con JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== OFERTAS ========== -->
+  <section id="ofertas" class="section offers">
+    <div class="container">
+      <h2 class="section-title">Ofertas especiales</h2>
+      <div class="offers-grid">
+        <div class="offer-card">
+          <i class="fas fa-gift"></i>
+          <h3>20% de descuento</h3>
+          <p>En tu primer pedido usando el código <strong>FLOR20</strong></p>
+        </div>
+        <div class="offer-card">
+          <i class="fas fa-truck"></i>
+          <h3>Envío gratis</h3>
+          <p>En pedidos superiores a $50.000</p>
+        </div>
+        <div class="offer-card">
+          <i class="fas fa-calendar-alt"></i>
+          <h3>Suscríbete</h3>
+          <p>Recibe flores frescas cada mes con un 15% de descuento</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== TESTIMONIOS ========== -->
+  <section id="testimonios" class="section testimonials">
+    <div class="container">
+      <h2 class="section-title">Lo que dicen nuestros clientes</h2>
+      <div class="testimonial-grid">
+        <div class="testimonial-card">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          <p>"Las flores llegaron frescas y hermosas. El ramo fue perfecto para el aniversario."</p>
+          <h4>— María G.</h4>
+        </div>
+        <div class="testimonial-card">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          <p>"Excelente servicio al cliente y una variedad increíble. ¡Mi lugar favorito para comprar flores!"</p>
+          <h4>— Carlos R.</h4>
+        </div>
+        <div class="testimonial-card">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          <p>"Los arreglos son únicos y muy creativos. Siempre recibo cumplidos cuando regalo sus flores."</p>
+          <h4>— Laura S.</h4>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CONTACTO ========== -->
+  <section id="contacto" class="section contact">
+    <div class="container">
+      <h2 class="section-title">Contáctanos</h2>
+      <div class="contact-wrapper">
+        <div class="contact-info">
+          <p><i class="fas fa-map-marker-alt"></i> Calle 123 #45-67, Bogotá</p>
+          <p><i class="fas fa-phone-alt"></i> +57 300 123 4567</p>
+          <p><i class="fas fa-envelope"></i> hola@petalosflores.com</p>
+          <div class="social-icons">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-whatsapp"></i></a>
+          </div>
+        </div>
+        <form id="contactForm" class="contact-form">
+          <input type="text" placeholder="Nombre" required />
+          <input type="email" placeholder="Correo electrónico" required />
+          <textarea placeholder="Mensaje" rows="4" required></textarea>
+          <button type="submit" class="btn-primary">Enviar mensaje</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Pétalos & Flores. Hecho con <i class="fas fa-heart"></i> para ti.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
