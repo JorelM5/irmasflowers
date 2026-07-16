@@ -1,37 +1,55 @@
-// ===== DATOS DE PRODUCTOS =====
+// ===== DATOS DE PRODUCTOS CON FOTOS DE EJEMPLO =====
 const productos = [
   {
     id: 1,
     nombre: "Ramo de Rosas Rojas",
-    precio: 45000,
+    precio: 45,
     imagen: "https://images.unsplash.com/photo-1561181286-d3fee7d29164?w=400"
   },
   {
     id: 2,
     nombre: "Arreglo de Girasoles",
-    precio: 38000,
+    precio: 38,
     imagen: "https://images.unsplash.com/photo-1593697971170-61c25f46224d?w=400"
   },
   {
     id: 3,
     nombre: "Orquídeas Exóticas",
-    precio: 62000,
+    precio: 62,
     imagen: "https://images.unsplash.com/photo-1566127992631-137a642a90d4?w=400"
   },
   {
     id: 4,
     nombre: "Ramo de Lirios",
-    precio: 50000,
+    precio: 50,
     imagen: "https://images.unsplash.com/photo-1559047613-52c30d017d4d?w=400"
+  },
+  {
+    id: 5,
+    nombre: "Tulipanes Coloridos",
+    precio: 55,
+    imagen: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?w=400"
+  },
+  {
+    id: 6,
+    nombre: "Arreglo de Rosas y Claveles",
+    precio: 68,
+    imagen: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?w=400"
   }
 ];
 
 // ===== CARRITO =====
 let carrito = [];
 
-// ===== RENDERIZAR PRODUCTOS =====
+// ===== ELEMENTOS DOM =====
 const productGrid = document.getElementById('productGrid');
+const cartModal = document.getElementById('cartModal');
+const orderModal = document.getElementById('orderModal');
+const cartItems = document.getElementById('cartItems');
+const cartTotal = document.getElementById('cartTotal');
+const cartCount = document.querySelector('.cart-count');
 
+// ===== RENDERIZAR PRODUCTOS =====
 function renderProductos() {
   productGrid.innerHTML = '';
   productos.forEach(prod => {
@@ -40,13 +58,12 @@ function renderProductos() {
     card.innerHTML = `
       <img src="${prod.imagen}" alt="${prod.nombre}" loading="lazy" />
       <h3>${prod.nombre}</h3>
-      <p class="price">$${prod.precio.toLocaleString()}</p>
+      <p class="price">$${prod.precio.toFixed(2)}</p>
       <button class="btn-add" data-id="${prod.id}">Agregar al carrito</button>
     `;
     productGrid.appendChild(card);
   });
 
-  // Eventos para botones "Agregar"
   document.querySelectorAll('.btn-add').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const id = parseInt(e.target.dataset.id);
@@ -67,17 +84,64 @@ function agregarAlCarrito(id) {
     carrito.push({ ...producto, cantidad: 1 });
   }
 
-  actualizarContadorCarrito();
-  mostrarNotificacion(`${producto.nombre} añadido al carrito ✅`);
+  actualizarContador();
+  mostrarNotificacion(`✅ ${producto.nombre} añadido al carrito`);
 }
 
 // ===== ACTUALIZAR CONTADOR =====
-function actualizarContadorCarrito() {
+function actualizarContador() {
   const count = carrito.reduce((total, item) => total + item.cantidad, 0);
-  document.querySelector('.cart-count').textContent = count;
+  cartCount.textContent = count;
 }
 
-// ===== NOTIFICACIÓN TOAST =====
+// ===== MOSTRAR CARRITO =====
+function mostrarCarrito() {
+  if (carrito.length === 0) {
+    cartItems.innerHTML = '<p class="cart-empty">🌿 El carrito está vacío</p>';
+    cartTotal.textContent = '$0.00';
+    return;
+  }
+
+  let html = '';
+  let total = 0;
+
+  carrito.forEach((item, index) => {
+    const subtotal = item.precio * item.cantidad;
+    total += subtotal;
+    html += `
+      <div class="cart-item">
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.nombre}</div>
+          <div class="cart-item-price">$${item.precio.toFixed(2)} x ${item.cantidad}</div>
+        </div>
+        <div class="cart-item-actions">
+          <button onclick="cambiarCantidad(${index}, -1)">−</button>
+          <span style="font-weight:600; margin:0 8px;">${item.cantidad}</span>
+          <button onclick="cambiarCantidad(${index}, 1)">+</button>
+        </div>
+      </div>
+    `;
+  });
+
+  cartItems.innerHTML = html;
+  cartTotal.textContent = `$${total.toFixed(2)}`;
+}
+
+// ===== CAMBIAR CANTIDAD =====
+function cambiarCantidad(index, cambio) {
+  const item = carrito[index];
+  if (!item) return;
+
+  item.cantidad += cambio;
+  if (item.cantidad <= 0) {
+    carrito.splice(index, 1);
+  }
+
+  actualizarContador();
+  mostrarCarrito();
+}
+
+// ===== NOTIFICACIÓN =====
 function mostrarNotificacion(mensaje) {
   const toast = document.createElement('div');
   toast.style.cssText = `
@@ -104,36 +168,144 @@ function mostrarNotificacion(mensaje) {
   }, 2500);
 }
 
+// ===== ABRIR CARRITO (click en el ícono) =====
+document.querySelector('.cart-icon').addEventListener('click', () => {
+  mostrarCarrito();
+  cartModal.classList.add('active');
+});
+
+// ===== CERRAR MODALES =====
+document.getElementById('cartClose').addEventListener('click', () => {
+  cartModal.classList.remove('active');
+});
+
+document.getElementById('orderClose').addEventListener('click', () => {
+  orderModal.classList.remove('active');
+});
+
+// Cerrar al hacer clic fuera
+window.addEventListener('click', (e) => {
+  if (e.target === cartModal) cartModal.classList.remove('active');
+  if (e.target === orderModal) orderModal.classList.remove('active');
+});
+
+// ===== FINALIZAR PEDIDO =====
+document.getElementById('checkoutBtn').addEventListener('click', () => {
+  if (carrito.length === 0) {
+    mostrarNotificacion('⚠️ El carrito está vacío');
+    return;
+  }
+  cartModal.classList.remove('active');
+  // Llenar el resumen del pedido
+  mostrarResumenPedido();
+  orderModal.classList.add('active');
+});
+
+// ===== MOSTRAR RESUMEN DEL PEDIDO =====
+function mostrarResumenPedido() {
+  const summary = document.getElementById('orderSummary');
+  let html = '<strong>📦 Tu pedido:</strong><br><br>';
+  let total = 0;
+  carrito.forEach(item => {
+    const subtotal = item.precio * item.cantidad;
+    total += subtotal;
+    html += `• ${item.nombre} x ${item.cantidad} = $${subtotal.toFixed(2)}<br>`;
+  });
+  html += `<br><strong>Total: $${total.toFixed(2)}</strong>`;
+  summary.innerHTML = html;
+}
+
+// ===== ENVIAR PEDIDO =====
+document.getElementById('orderForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const nombre = document.getElementById('orderName').value;
+  const telefono = document.getElementById('orderPhone').value;
+  const email = document.getElementById('orderEmail').value;
+  const direccion = document.getElementById('orderAddress').value;
+  const notas = document.getElementById('orderNotes').value;
+
+  // Construir mensaje del pedido
+  let mensaje = '🌷 *NUEVO PEDIDO - Irma\'s Flowers* 🌷\n\n';
+  mensaje += `👤 *Cliente:* ${nombre}\n`;
+  mensaje += `📱 *Teléfono:* ${telefono}\n`;
+  mensaje += `📧 *Email:* ${email}\n`;
+  mensaje += `📍 *Dirección:* ${direccion}\n\n`;
+  mensaje += `📦 *Productos:*\n`;
+
+  let total = 0;
+  carrito.forEach(item => {
+    const subtotal = item.precio * item.cantidad;
+    total += subtotal;
+    mensaje += `• ${item.nombre} x ${item.cantidad} = $${subtotal.toFixed(2)}\n`;
+  });
+
+  mensaje += `\n💰 *Total: $${total.toFixed(2)}*\n`;
+  if (notas) mensaje += `\n📝 *Notas:* ${notas}`;
+
+  // ========== OPCIÓN 1: ENVIAR POR CORREO (usando mailto) ==========
+  const asunto = encodeURIComponent(`Nuevo pedido de ${nombre} - Irma's Flowers`);
+  const cuerpo = encodeURIComponent(mensaje);
+  const mailtoLink = `mailto:info@irmasflowers.com?subject=${asunto}&body=${cuerpo}`;
+
+  // ========== OPCIÓN 2: ENVIAR POR WHATSAPP ==========
+  // Número de Irma's Flowers (formato internacional sin + ni espacios)
+  const telefonoWhatsApp = '19165591808'; // Código de país 1 + número
+  const whatsappLink = `https://wa.me/${telefonoWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+
+  // Mostrar opciones al usuario
+  const opcion = confirm(
+    '📩 ¿Cómo quieres enviar tu pedido?\n\n' +
+    '✅ Aceptar = Enviar por WhatsApp (RECOMENDADO)\n' +
+    '❌ Cancelar = Enviar por correo electrónico'
+  );
+
+  if (opcion) {
+    // Abrir WhatsApp
+    window.open(whatsappLink, '_blank');
+  } else {
+    // Abrir correo
+    window.open(mailtoLink, '_blank');
+  }
+
+  // Limpiar carrito
+  carrito = [];
+  actualizarContador();
+  orderModal.classList.remove('active');
+
+  mostrarNotificacion('🎉 ¡Pedido enviado! Te contactaremos pronto');
+  document.getElementById('orderForm').reset();
+});
+
 // ===== MENÚ HAMBURGUESA =====
 document.getElementById('menuToggle').addEventListener('click', () => {
   document.querySelector('.nav-links').classList.toggle('active');
 });
 
-// ===== CONTACTO: ALERTA =====
+// ===== CONTACTO =====
 document.getElementById('contactForm').addEventListener('submit', (e) => {
   e.preventDefault();
-  alert('¡Gracias por contactarnos! Te responderemos pronto 🌸');
+  alert('📨 ¡Gracias por contactarnos! Te responderemos pronto 🌸');
   e.target.reset();
 });
 
-// ===== INICIALIZAR =====
-renderProductos();
-actualizarContadorCarrito();
-
-// ===== ANIMACIÓN SUAVE PARA ENLACES =====
+// ===== NAVEGACIÓN SUAVE =====
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
     e.preventDefault();
     const target = document.querySelector(this.getAttribute('href'));
     if (target) {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      // Cerrar menú móvil si está abierto
       document.querySelector('.nav-links').classList.remove('active');
     }
   });
 });
 
-// ===== ESTILO PARA LA NOTIFICACIÓN (keyframes) =====
+// ===== INICIALIZAR =====
+renderProductos();
+actualizarContador();
+
+// ===== ESTILOS PARA NOTIFICACIÓN =====
 const styleSheet = document.createElement('style');
 styleSheet.textContent = `
   @keyframes slideUp {
