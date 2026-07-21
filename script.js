@@ -120,19 +120,15 @@ function renderGaleria(cantidad) {
   galleryGrid.appendChild(fragment);
   imagenesCargadas = end;
 
-  // ===== EVENTO: CLICK EN IMAGEN → AGREGAR AL CARRITO + LIGHTBOX =====
+  // ===== EVENTO: CLICK EN IMAGEN → SOLO ABRE LIGHTBOX =====
   document.querySelectorAll('.gallery-item img').forEach(img => {
     img.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       
-      const id = parseInt(e.target.dataset.id);
       const src = e.target.src;
       
-      // 1. Agregar al carrito
-      agregarAlCarrito(id);
-      
-      // 2. Abrir lightbox sin perder posición
+      // Solo abrir lightbox, NO agregar al carrito
       abrirLightbox(src);
     });
   });
@@ -173,6 +169,20 @@ function agregarAlCarrito(id) {
 }
 
 // ============================================
+// ===== ELIMINAR DEL CARRITO (NUEVO) =====
+// ============================================
+
+function eliminarDelCarrito(index) {
+  const producto = carrito[index];
+  if (!producto) return;
+  
+  carrito.splice(index, 1);
+  actualizarContador();
+  mostrarCarrito();
+  mostrarNotificacion(`🗑️ ${producto.nombre} eliminado del carrito`);
+}
+
+// ============================================
 // ===== ACTUALIZAR CONTADOR =====
 // ============================================
 
@@ -182,7 +192,7 @@ function actualizarContador() {
 }
 
 // ============================================
-// ===== MOSTRAR CARRITO =====
+// ===== MOSTRAR CARRITO (CON BOTÓN ELIMINAR) =====
 // ============================================
 
 function mostrarCarrito() {
@@ -205,9 +215,12 @@ function mostrarCarrito() {
           <div class="cart-item-price">$${item.precio.toFixed(2)} x ${item.cantidad}</div>
         </div>
         <div class="cart-item-actions">
-          <button onclick="cambiarCantidad(${index}, -1)">−</button>
+          <button onclick="cambiarCantidad(${index}, -1)" title="Quitar uno">−</button>
           <span style="font-weight:600; margin:0 8px;">${item.cantidad}</span>
-          <button onclick="cambiarCantidad(${index}, 1)">+</button>
+          <button onclick="cambiarCantidad(${index}, 1)" title="Agregar uno">+</button>
+          <button onclick="eliminarDelCarrito(${index})" style="background:#c0392b; margin-left:8px;" title="Eliminar producto">
+            <i class="fas fa-trash"></i>
+          </button>
         </div>
       </div>
     `;
@@ -386,13 +399,14 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 });
 
 // ============================================
-// ===== LIGHTBOX MEJORADO (SIN PERDER POSICIÓN) =====
+// ===== LIGHTBOX CON BOTÓN AGREGAR AL CARRITO =====
 // ============================================
 
 const lightbox = document.getElementById('lightbox');
 const lightboxImg = document.getElementById('lightboxImg');
 let currentImageIndex = 0;
 let galleryImages = [];
+let currentProductId = null;
 
 function abrirLightbox(src) {
   // Guardar la posición actual del scroll
@@ -410,15 +424,35 @@ function abrirLightbox(src) {
     currentImageIndex = 0;
   }
   
+  // Obtener el ID del producto desde el atributo data-id
+  const imgElement = document.querySelector(`img[src="${src}"]`);
+  if (imgElement) {
+    currentProductId = parseInt(imgElement.dataset.id);
+  }
+  
   // Mostrar la imagen en el lightbox
   lightboxImg.src = galleryImages[currentImageIndex];
   lightbox.classList.add('active');
+  
+  // Actualizar el botón del lightbox con el nombre del producto
+  actualizarBotonLightbox();
   
   // Bloquear el scroll del body pero mantener la posición
   document.body.style.position = 'fixed';
   document.body.style.top = `-${scrollPosition}px`;
   document.body.style.width = '100%';
   document.body.style.overflow = 'hidden';
+}
+
+function actualizarBotonLightbox() {
+  const producto = productos.find(p => p.id === currentProductId);
+  const btn = document.getElementById('lightboxAddToCart');
+  if (producto && btn) {
+    btn.innerHTML = `<i class="fas fa-shopping-cart"></i> Agregar ${producto.nombre} - $${producto.precio.toFixed(2)}`;
+    btn.style.display = 'block';
+  } else if (btn) {
+    btn.style.display = 'none';
+  }
 }
 
 function cerrarLightbox() {
@@ -438,6 +472,21 @@ function cambiarImagen(direccion) {
   if (galleryImages.length === 0) return;
   currentImageIndex = (currentImageIndex + direccion + galleryImages.length) % galleryImages.length;
   lightboxImg.src = galleryImages[currentImageIndex];
+  
+  // Actualizar el ID del producto actual
+  const imgElement = document.querySelector(`img[src="${galleryImages[currentImageIndex]}"]`);
+  if (imgElement) {
+    currentProductId = parseInt(imgElement.dataset.id);
+    actualizarBotonLightbox();
+  }
+}
+
+// ===== AGREGAR AL CARRITO DESDE LIGHTBOX =====
+function agregarDesdeLightbox() {
+  if (currentProductId) {
+    agregarAlCarrito(currentProductId);
+    // No cerramos el lightbox para que siga viendo
+  }
 }
 
 // ===== EVENTOS DEL LIGHTBOX =====
@@ -456,6 +505,13 @@ document.getElementById('lightboxNext').addEventListener('click', (e) => {
   e.preventDefault();
   e.stopPropagation();
   cambiarImagen(1);
+});
+
+// Evento para el botón de agregar desde lightbox
+document.getElementById('lightboxAddToCart').addEventListener('click', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  agregarDesdeLightbox();
 });
 
 // ===== TECLAS DEL TECLADO =====
@@ -502,10 +558,8 @@ function handleSwipe() {
   
   if (Math.abs(diff) > swipeThreshold) {
     if (diff > 0) {
-      // Deslizar a la izquierda → siguiente imagen
       cambiarImagen(1);
     } else {
-      // Deslizar a la derecha → imagen anterior
       cambiarImagen(-1);
     }
   }
