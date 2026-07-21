@@ -674,3 +674,40 @@ footer i.fa-heart {
 .gallery-item:nth-child(6) { animation-delay: 0.30s; }
 .gallery-item:nth-child(7) { animation-delay: 0.35s; }
 .gallery-item:nth-child(8) { animation-delay: 0.40s; }
+/* ===== BOTÓN AGREGAR EN LIGHTBOX ===== */
+.lightbox-add-btn {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2e7d32;
+  color: #fff;
+  border: none;
+  padding: 14px 30px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  font-family: 'Quicksand', sans-serif;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  z-index: 10;
+}
+
+.lightbox-add-btn:hover {
+  background: #1b5e20;
+  transform: translateX(-50%) scale(1.03);
+}
+
+.lightbox-add-btn:active {
+  transform: translateX(-50%) scale(0.97);
+}
+
+@media (max-width: 768px) {
+  .lightbox-add-btn {
+    bottom: 80px;
+    padding: 12px 20px;
+    font-size: 0.85rem;
+    width: 80%;
+  }
+}
