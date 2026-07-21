@@ -404,6 +404,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 
 const lightbox = document.getElementById('lightbox');
 const lightboxImg = document.getElementById('lightboxImg');
+const lightboxProductName = document.getElementById('lightboxProductName');
 let currentImageIndex = 0;
 let galleryImages = [];
 let currentProductId = null;
@@ -434,8 +435,8 @@ function abrirLightbox(src) {
   lightboxImg.src = galleryImages[currentImageIndex];
   lightbox.classList.add('active');
   
-  // Actualizar el botón del lightbox con el nombre del producto
-  actualizarBotonLightbox();
+  // Actualizar el nombre y el botón del lightbox
+  actualizarLightboxInfo();
   
   // Bloquear el scroll del body pero mantener la posición
   document.body.style.position = 'fixed';
@@ -444,8 +445,18 @@ function abrirLightbox(src) {
   document.body.style.overflow = 'hidden';
 }
 
-function actualizarBotonLightbox() {
+function actualizarLightboxInfo() {
   const producto = productos.find(p => p.id === currentProductId);
+  
+  // Actualizar nombre
+  if (producto && lightboxProductName) {
+    lightboxProductName.textContent = `🌸 ${producto.nombre}`;
+    lightboxProductName.style.display = 'block';
+  } else if (lightboxProductName) {
+    lightboxProductName.style.display = 'none';
+  }
+  
+  // Actualizar botón
   const btn = document.getElementById('lightboxAddToCart');
   if (producto && btn) {
     btn.innerHTML = `<i class="fas fa-shopping-cart"></i> Agregar ${producto.nombre} - $${producto.precio.toFixed(2)}`;
@@ -480,7 +491,6 @@ function cambiarImagen(direccion) {
   lightboxImg.src = galleryImages[currentImageIndex];
   
   // BUSCAR EL ID DEL PRODUCTO CORRECTO PARA LA IMAGEN ACTUAL
-  // Usamos el nombre del archivo para encontrar el producto
   const currentSrc = galleryImages[currentImageIndex];
   const imgElement = document.querySelector(`img[src="${currentSrc}"]`);
   
@@ -495,19 +505,14 @@ function cambiarImagen(direccion) {
     }
   }
   
-  // Actualizar el botón con el nuevo producto
-  actualizarBotonLightbox();
+  // Actualizar la información del lightbox
+  actualizarLightboxInfo();
 }
 
 // ===== AGREGAR AL CARRITO DESDE LIGHTBOX =====
 function agregarDesdeLightbox() {
   if (currentProductId) {
     agregarAlCarrito(currentProductId);
-    // Mostrar una notificación adicional
-    const producto = productos.find(p => p.id === currentProductId);
-    if (producto) {
-      mostrarNotificacion(`✅ ${producto.nombre} añadido al carrito`);
-    }
   } else {
     mostrarNotificacion('⚠️ No se pudo agregar el producto');
   }
