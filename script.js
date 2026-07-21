@@ -102,7 +102,7 @@ function renderGaleria(cantidad) {
     const item = document.createElement('div');
     item.className = 'gallery-item';
     item.innerHTML = `
-      <img src="${prod.imagen}" alt="${prod.nombre}" loading="lazy" />
+      <img src="${prod.imagen}" alt="${prod.nombre}" loading="lazy" data-id="${prod.id}" />
       <div class="gallery-info">
         <h3>${prod.nombre}</h3>
         <p class="price">$${prod.precio.toFixed(2)}</p>
@@ -117,20 +117,25 @@ function renderGaleria(cantidad) {
   galleryGrid.appendChild(fragment);
   imagenesCargadas = end;
 
-  // Asignar eventos a los botones
+  // ===== EVENTO: CLICK EN IMAGEN → AGREGAR AL CARRITO =====
+  document.querySelectorAll('.gallery-item img').forEach(img => {
+    img.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = parseInt(e.target.dataset.id);
+      agregarAlCarrito(id);
+      
+      // También abrir el lightbox para que vea la imagen grande
+      const src = e.target.src;
+      abrirLightbox(src);
+    });
+  });
+
+  // ===== EVENTO: BOTÓN AGREGAR AL CARRITO =====
   document.querySelectorAll('.btn-add').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const id = parseInt(e.target.dataset.id || e.target.closest('.btn-add').dataset.id);
       agregarAlCarrito(id);
-    });
-  });
-
-  // Asignar evento de lightbox a las imágenes
-  document.querySelectorAll('.gallery-item img').forEach(img => {
-    img.addEventListener('click', () => {
-      const src = img.src;
-      abrirLightbox(src);
     });
   });
 
@@ -368,7 +373,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 });
 
 // ============================================
-// ===== LIGHTBOX =====
+// ===== LIGHTBOX MEJORADO =====
 // ============================================
 
 const lightbox = document.getElementById('lightbox');
@@ -377,13 +382,22 @@ let currentImageIndex = 0;
 let galleryImages = [];
 
 function abrirLightbox(src) {
-  lightboxImg.src = src;
-  lightbox.classList.add('active');
-  document.body.style.overflow = 'hidden';
-  
+  // Obtener todas las imágenes de la galería
   const items = document.querySelectorAll('.gallery-item img');
   galleryImages = Array.from(items).map(img => img.src);
+  
+  // Encontrar el índice de la imagen actual
   currentImageIndex = galleryImages.indexOf(src);
+  
+  // Si no encuentra la imagen, usar la primera
+  if (currentImageIndex === -1) {
+    currentImageIndex = 0;
+  }
+  
+  // Mostrar la imagen en el lightbox
+  lightboxImg.src = galleryImages[currentImageIndex];
+  lightbox.classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
 
 function cerrarLightbox() {
@@ -397,19 +411,61 @@ function cambiarImagen(direccion) {
   lightboxImg.src = galleryImages[currentImageIndex];
 }
 
+// ===== EVENTOS DEL LIGHTBOX =====
 document.getElementById('lightboxClose').addEventListener('click', cerrarLightbox);
-document.getElementById('lightboxPrev').addEventListener('click', () => cambiarImagen(-1));
-document.getElementById('lightboxNext').addEventListener('click', () => cambiarImagen(1));
 
+document.getElementById('lightboxPrev').addEventListener('click', (e) => {
+  e.stopPropagation();
+  cambiarImagen(-1);
+});
+
+document.getElementById('lightboxNext').addEventListener('click', (e) => {
+  e.stopPropagation();
+  cambiarImagen(1);
+});
+
+// ===== TECLAS DEL TECLADO =====
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') cerrarLightbox();
   if (e.key === 'ArrowLeft') cambiarImagen(-1);
   if (e.key === 'ArrowRight') cambiarImagen(1);
 });
 
+// ===== CERRAR AL HACER CLICK FUERA =====
 lightbox.addEventListener('click', (e) => {
   if (e.target === lightbox) cerrarLightbox();
 });
+
+// ============================================
+// ===== TOUCH PARA MÓVIL (deslizar) =====
+// ============================================
+
+let touchStartX = 0;
+let touchEndX = 0;
+
+lightbox.addEventListener('touchstart', (e) => {
+  touchStartX = e.changedTouches[0].screenX;
+});
+
+lightbox.addEventListener('touchend', (e) => {
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipe();
+});
+
+function handleSwipe() {
+  const swipeThreshold = 50;
+  const diff = touchStartX - touchEndX;
+  
+  if (Math.abs(diff) > swipeThreshold) {
+    if (diff > 0) {
+      // Deslizar a la izquierda → siguiente imagen
+      cambiarImagen(1);
+    } else {
+      // Deslizar a la derecha → imagen anterior
+      cambiarImagen(-1);
+    }
+  }
+}
 
 // ============================================
 // ===== CARGA INICIAL =====
