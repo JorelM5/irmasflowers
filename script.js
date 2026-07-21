@@ -1,78 +1,149 @@
-// ===== DATOS DE PRODUCTOS CON TUS IMÁGENES =====
-const productos = [
-  {
-    id: 1,
-    nombre: "Ramo de Rosas Rojas",
-    precio: 45,
-    imagen: "img/1irmas.jpeg"
-  },
-  {
-    id: 2,
-    nombre: "Arreglo de Girasoles",
-    precio: 38,
-    imagen: "img/2irmas.jpeg"
-  },
-  {
-    id: 3,
-    nombre: "Orquídeas Exóticas",
-    precio: 62,
-    imagen: "img/3irmas.jpeg"
-  },
-  {
-    id: 4,
-    nombre: "Ramo de Lirios",
-    precio: 50,
-    imagen: "img/4irmas.jpeg"
-  },
-  {
-    id: 5,
-    nombre: "Tulipanes Coloridos",
-    precio: 55,
-    imagen: "img/5irmas.jpeg"
-  },
-  {
-    id: 6,
-    nombre: "Arreglo de Rosas y Claveles",
-    precio: 68,
-    imagen: "img/6irmas.jpeg"
-  }
+// ============================================
+// ===== DATOS DE PRODUCTOS (37 IMÁGENES) =====
+// ============================================
+
+// Generamos automáticamente los 37 productos
+const productos = [];
+
+// Lista de nombres de flores para variar
+const nombres = [
+  "Ramo de Rosas Rojas",
+  "Arreglo de Girasoles",
+  "Orquídeas Exóticas",
+  "Ramo de Lirios",
+  "Tulipanes Coloridos",
+  "Arreglo de Rosas y Claveles",
+  "Ramo de Flores Mixtas",
+  "Centro de Mesa Elegante",
+  "Ramo de Girasoles y Rosas",
+  "Arreglo de Primavera",
+  "Ramo de Claveles",
+  "Arreglo de Orquídeas",
+  "Ramo de Rosas Blancas",
+  "Arreglo de Flores Silvestres",
+  "Ramo de Gerberas",
+  "Centro de Mesa Romántico",
+  "Ramo de Flores Tropicales",
+  "Arreglo de Lirios y Rosas",
+  "Ramo de Girasoles Gigantes",
+  "Arreglo de Flores de Campo",
+  "Ramo de Rosas y Lirios",
+  "Arreglo de Flores Exóticas",
+  "Ramo de Claveles y Rosas",
+  "Centro de Mesa Clásico",
+  "Ramo de Flores de Temporada",
+  "Arreglo de Girasoles y Claveles",
+  "Ramo de Rosas y Tulipanes",
+  "Arreglo de Flores Naturales",
+  "Ramo de Gerberas y Rosas",
+  "Centro de Mesa Moderno",
+  "Ramo de Flores Premium",
+  "Arreglo de Rosas Rojas y Blancas",
+  "Ramo de Flores para Bodas",
+  "Arreglo de Flores para Aniversario",
+  "Ramo de Rosas y Orquídeas",
+  "Arreglo de Flores Especial",
+  "Ramo de Flores Deluxe"
 ];
 
+// Precios variados entre $35 y $95
+const precios = [
+  45, 38, 62, 50, 55, 68, 72, 85, 58, 48,
+  35, 75, 42, 52, 40, 78, 65, 55, 60, 44,
+  48, 70, 38, 80, 46, 50, 52, 42, 46, 82,
+  58, 48, 90, 65, 55, 95, 60
+];
+
+// Generar los 37 productos
+for (let i = 0; i < 37; i++) {
+  const num = i + 1;
+  productos.push({
+    id: num,
+    nombre: nombres[i] || `Arreglo Floral #${num}`,
+    precio: precios[i] || 45 + Math.floor(Math.random() * 50),
+    imagen: `img/${num}irmas.jpeg`
+  });
+}
+
+// ============================================
 // ===== CARRITO =====
+// ============================================
+
 let carrito = [];
 
+// ============================================
 // ===== ELEMENTOS DOM =====
-const productGrid = document.getElementById('productGrid');
+// ============================================
+
+const galleryGrid = document.getElementById('galleryGrid');
 const cartModal = document.getElementById('cartModal');
 const orderModal = document.getElementById('orderModal');
 const cartItems = document.getElementById('cartItems');
 const cartTotal = document.getElementById('cartTotal');
 const cartCount = document.querySelector('.cart-count');
+const loadMoreBtn = document.getElementById('loadMoreBtn');
 
-// ===== RENDERIZAR PRODUCTOS =====
-function renderProductos() {
-  productGrid.innerHTML = '';
-  productos.forEach(prod => {
-    const card = document.createElement('div');
-    card.className = 'product-card';
-    card.innerHTML = `
+// ===== ESTADO DE LA GALERÍA =====
+let imagenesCargadas = 0;
+const imagenesPorCarga = 12;
+const totalProductos = productos.length;
+
+// ============================================
+// ===== RENDERIZAR GALERÍA / TIENDA =====
+// ============================================
+
+function renderGaleria(cantidad) {
+  const fragment = document.createDocumentFragment();
+  const start = imagenesCargadas;
+  const end = Math.min(start + cantidad, totalProductos);
+
+  for (let i = start; i < end; i++) {
+    const prod = productos[i];
+    const item = document.createElement('div');
+    item.className = 'gallery-item';
+    item.innerHTML = `
       <img src="${prod.imagen}" alt="${prod.nombre}" loading="lazy" />
-      <h3>${prod.nombre}</h3>
-      <p class="price">$${prod.precio.toFixed(2)}</p>
-      <button class="btn-add" data-id="${prod.id}">Agregar al carrito</button>
+      <div class="gallery-info">
+        <h3>${prod.nombre}</h3>
+        <p class="price">$${prod.precio.toFixed(2)}</p>
+        <button class="btn-add" data-id="${prod.id}">
+          <i class="fas fa-shopping-cart"></i> Agregar al carrito
+        </button>
+      </div>
     `;
-    productGrid.appendChild(card);
-  });
+    fragment.appendChild(item);
+  }
 
+  galleryGrid.appendChild(fragment);
+  imagenesCargadas = end;
+
+  // Asignar eventos a los botones
   document.querySelectorAll('.btn-add').forEach(btn => {
     btn.addEventListener('click', (e) => {
-      const id = parseInt(e.target.dataset.id);
+      e.stopPropagation();
+      const id = parseInt(e.target.dataset.id || e.target.closest('.btn-add').dataset.id);
       agregarAlCarrito(id);
     });
   });
+
+  // Asignar evento de lightbox a las imágenes
+  document.querySelectorAll('.gallery-item img').forEach(img => {
+    img.addEventListener('click', () => {
+      const src = img.src;
+      abrirLightbox(src);
+    });
+  });
+
+  // Ocultar botón si ya cargamos todos
+  if (imagenesCargadas >= totalProductos) {
+    loadMoreBtn.style.display = 'none';
+  }
 }
 
+// ============================================
 // ===== AGREGAR AL CARRITO =====
+// ============================================
+
 function agregarAlCarrito(id) {
   const producto = productos.find(p => p.id === id);
   if (!producto) return;
@@ -88,13 +159,19 @@ function agregarAlCarrito(id) {
   mostrarNotificacion(`✅ ${producto.nombre} añadido al carrito`);
 }
 
+// ============================================
 // ===== ACTUALIZAR CONTADOR =====
+// ============================================
+
 function actualizarContador() {
   const count = carrito.reduce((total, item) => total + item.cantidad, 0);
   cartCount.textContent = count;
 }
 
+// ============================================
 // ===== MOSTRAR CARRITO =====
+// ============================================
+
 function mostrarCarrito() {
   if (carrito.length === 0) {
     cartItems.innerHTML = '<p class="cart-empty">🌿 El carrito está vacío</p>';
@@ -127,7 +204,10 @@ function mostrarCarrito() {
   cartTotal.textContent = `$${total.toFixed(2)}`;
 }
 
+// ============================================
 // ===== CAMBIAR CANTIDAD =====
+// ============================================
+
 function cambiarCantidad(index, cambio) {
   const item = carrito[index];
   if (!item) return;
@@ -141,7 +221,10 @@ function cambiarCantidad(index, cambio) {
   mostrarCarrito();
 }
 
+// ============================================
 // ===== NOTIFICACIÓN =====
+// ============================================
+
 function mostrarNotificacion(mensaje) {
   const toast = document.createElement('div');
   toast.style.cssText = `
@@ -168,13 +251,19 @@ function mostrarNotificacion(mensaje) {
   }, 2500);
 }
 
-// ===== ABRIR CARRITO (click en el ícono) =====
+// ============================================
+// ===== ABRIR CARRITO =====
+// ============================================
+
 document.querySelector('.cart-icon').addEventListener('click', () => {
   mostrarCarrito();
   cartModal.classList.add('active');
 });
 
+// ============================================
 // ===== CERRAR MODALES =====
+// ============================================
+
 document.getElementById('cartClose').addEventListener('click', () => {
   cartModal.classList.remove('active');
 });
@@ -183,13 +272,15 @@ document.getElementById('orderClose').addEventListener('click', () => {
   orderModal.classList.remove('active');
 });
 
-// Cerrar al hacer clic fuera
 window.addEventListener('click', (e) => {
   if (e.target === cartModal) cartModal.classList.remove('active');
   if (e.target === orderModal) orderModal.classList.remove('active');
 });
 
+// ============================================
 // ===== FINALIZAR PEDIDO =====
+// ============================================
+
 document.getElementById('checkoutBtn').addEventListener('click', () => {
   if (carrito.length === 0) {
     mostrarNotificacion('⚠️ El carrito está vacío');
@@ -200,7 +291,10 @@ document.getElementById('checkoutBtn').addEventListener('click', () => {
   orderModal.classList.add('active');
 });
 
+// ============================================
 // ===== MOSTRAR RESUMEN DEL PEDIDO =====
+// ============================================
+
 function mostrarResumenPedido() {
   const summary = document.getElementById('orderSummary');
   let html = '<strong>📦 Tu pedido:</strong><br><br>';
@@ -214,7 +308,10 @@ function mostrarResumenPedido() {
   summary.innerHTML = html;
 }
 
+// ============================================
 // ===== ENVIAR PEDIDO =====
+// ============================================
+
 document.getElementById('orderForm').addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -224,7 +321,6 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
   const direccion = document.getElementById('orderAddress').value;
   const notas = document.getElementById('orderNotes').value;
 
-  // Construir mensaje del pedido
   let mensaje = '🌷 *NUEVO PEDIDO - Irma\'s Flowers* 🌷\n\n';
   mensaje += `👤 *Cliente:* ${nombre}\n`;
   mensaje += `📱 *Teléfono:* ${telefono}\n`;
@@ -242,16 +338,15 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
   mensaje += `\n💰 *Total: $${total.toFixed(2)}*\n`;
   if (notas) mensaje += `\n📝 *Notas:* ${notas}`;
 
-  // ========== ENVIAR POR CORREO ==========
+  // ===== ENVIAR POR WHATSAPP =====
+  const telefonoWhatsApp = '19165591808';
+  const whatsappLink = `https://wa.me/${telefonoWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+
+  // ===== ENVIAR POR CORREO =====
   const asunto = encodeURIComponent(`Nuevo pedido de ${nombre} - Irma's Flowers`);
   const cuerpo = encodeURIComponent(mensaje);
   const mailtoLink = `mailto:info@irmasflowers.com?subject=${asunto}&body=${cuerpo}`;
 
-  // ========== ENVIAR POR WHATSAPP ==========
-  const telefonoWhatsApp = '19165591808';
-  const whatsappLink = `https://wa.me/${telefonoWhatsApp}?text=${encodeURIComponent(mensaje)}`;
-
-  // Mostrar opciones al usuario
   const opcion = confirm(
     '📩 ¿Cómo quieres enviar tu pedido?\n\n' +
     '✅ Aceptar = Enviar por WhatsApp (RECOMENDADO)\n' +
@@ -264,7 +359,6 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
     window.open(mailtoLink, '_blank');
   }
 
-  // Limpiar carrito
   carrito = [];
   actualizarContador();
   orderModal.classList.remove('active');
@@ -274,52 +368,9 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 });
 
 // ============================================
-// ===== GALERÍA DE IMÁGENES =====
+// ===== LIGHTBOX =====
 // ============================================
 
-// ===== GENERAR GALERÍA =====
-const totalImagenes = 37;
-const galleryGrid = document.getElementById('galleryGrid');
-let imagenesCargadas = 0;
-const imagenesPorCarga = 12;
-
-function generarGaleria(cantidad) {
-  const fragment = document.createDocumentFragment();
-  const start = imagenesCargadas;
-  const end = Math.min(start + cantidad, totalImagenes);
-
-  for (let i = start; i < end; i++) {
-    const num = i + 1;
-    const item = document.createElement('div');
-    item.className = 'gallery-item';
-    item.innerHTML = `
-      <img src="img/${num}irmas.jpeg" alt="Arreglo floral ${num}" loading="lazy" />
-      <div class="gallery-overlay">
-        <span>🌸 Arreglo #${num}</span>
-      </div>
-    `;
-    // Click para abrir lightbox
-    item.addEventListener('click', () => {
-      abrirLightbox(`img/${num}irmas.jpeg`);
-    });
-    fragment.appendChild(item);
-  }
-
-  galleryGrid.appendChild(fragment);
-  imagenesCargadas = end;
-
-  // Ocultar botón si ya cargamos todas
-  if (imagenesCargadas >= totalImagenes) {
-    document.getElementById('loadMoreBtn').style.display = 'none';
-  }
-}
-
-// ===== CARGAR MÁS IMÁGENES =====
-document.getElementById('loadMoreBtn').addEventListener('click', () => {
-  generarGaleria(imagenesPorCarga);
-});
-
-// ===== LIGHTBOX =====
 const lightbox = document.getElementById('lightbox');
 const lightboxImg = document.getElementById('lightboxImg');
 let currentImageIndex = 0;
@@ -330,7 +381,6 @@ function abrirLightbox(src) {
   lightbox.classList.add('active');
   document.body.style.overflow = 'hidden';
   
-  // Obtener todas las imágenes de la galería para navegación
   const items = document.querySelectorAll('.gallery-item img');
   galleryImages = Array.from(items).map(img => img.src);
   currentImageIndex = galleryImages.indexOf(src);
@@ -347,26 +397,32 @@ function cambiarImagen(direccion) {
   lightboxImg.src = galleryImages[currentImageIndex];
 }
 
-// ===== EVENTOS LIGHTBOX =====
 document.getElementById('lightboxClose').addEventListener('click', cerrarLightbox);
 document.getElementById('lightboxPrev').addEventListener('click', () => cambiarImagen(-1));
 document.getElementById('lightboxNext').addEventListener('click', () => cambiarImagen(1));
 
-// Cerrar con tecla ESC
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') cerrarLightbox();
   if (e.key === 'ArrowLeft') cambiarImagen(-1);
   if (e.key === 'ArrowRight') cambiarImagen(1);
 });
 
-// Cerrar al hacer clic fuera de la imagen
 lightbox.addEventListener('click', (e) => {
   if (e.target === lightbox) cerrarLightbox();
 });
 
 // ============================================
+// ===== CARGA INICIAL =====
+// ============================================
+
+loadMoreBtn.addEventListener('click', () => {
+  renderGaleria(imagenesPorCarga);
+});
+
+// ============================================
 // ===== MENÚ HAMBURGUESA =====
 // ============================================
+
 document.getElementById('menuToggle').addEventListener('click', () => {
   document.querySelector('.nav-links').classList.toggle('active');
 });
@@ -374,6 +430,7 @@ document.getElementById('menuToggle').addEventListener('click', () => {
 // ============================================
 // ===== CONTACTO =====
 // ============================================
+
 document.getElementById('contactForm').addEventListener('submit', (e) => {
   e.preventDefault();
   alert('📨 ¡Gracias por contactarnos! Te responderemos pronto 🌸');
@@ -383,6 +440,7 @@ document.getElementById('contactForm').addEventListener('submit', (e) => {
 // ============================================
 // ===== NAVEGACIÓN SUAVE =====
 // ============================================
+
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
     e.preventDefault();
@@ -397,13 +455,14 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // ============================================
 // ===== INICIALIZAR =====
 // ============================================
-renderProductos();
+
+renderGaleria(imagenesPorCarga);
 actualizarContador();
-generarGaleria(imagenesPorCarga);
 
 // ============================================
 // ===== ESTILOS PARA NOTIFICACIÓN =====
 // ============================================
+
 const styleSheet = document.createElement('style');
 styleSheet.textContent = `
   @keyframes slideUp {
