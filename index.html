@@ -23,6 +23,7 @@
         <ul class="nav-links">
           <li><a href="#inicio">Inicio</a></li>
           <li><a href="#productos">Productos</a></li>
+          <li><a href="#galeria">Galería</a></li>
           <li><a href="#ofertas">Ofertas</a></li>
           <li><a href="#testimonios">Testimonios</a></li>
           <li><a href="#contacto">Contacto</a></li>
@@ -54,6 +55,21 @@
       <h2 class="section-title">Nuestros productos</h2>
       <div class="product-grid" id="productGrid">
         <!-- Los productos se generan con JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== GALERÍA ========== -->
+  <section id="galeria" class="section gallery">
+    <div class="container">
+      <h2 class="section-title">Galería de arreglos</h2>
+      <p class="gallery-subtitle">Descubre nuestra inspiración y creatividad en cada arreglo floral</p>
+      <div class="gallery-grid" id="galleryGrid">
+        <!-- Las imágenes se generan con JavaScript -->
+      </div>
+      <!-- Botón para ver más -->
+      <div class="gallery-load-more">
+        <button id="loadMoreBtn" class="btn-primary">Ver más arreglos</button>
       </div>
     </div>
   </section>
@@ -166,6 +182,16 @@
           Enviar pedido 📩
         </button>
       </form>
+    </div>
+  </div>
+
+  <!-- ========== MODAL GALERÍA (Lightbox) ========== -->
+  <div class="lightbox" id="lightbox">
+    <span class="lightbox-close" id="lightboxClose">&times;</span>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="Arreglo floral" />
+    <div class="lightbox-nav">
+      <button id="lightboxPrev" class="lightbox-btn">❮</button>
+      <button id="lightboxNext" class="lightbox-btn">❯</button>
     </div>
   </div>
 
