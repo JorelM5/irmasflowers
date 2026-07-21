@@ -88,6 +88,9 @@ let imagenesCargadas = 0;
 const imagenesPorCarga = 12;
 const totalProductos = productos.length;
 
+// Guardar la posición de scroll actual
+let scrollPosition = 0;
+
 // ============================================
 // ===== RENDERIZAR GALERÍA / TIENDA =====
 // ============================================
@@ -117,15 +120,19 @@ function renderGaleria(cantidad) {
   galleryGrid.appendChild(fragment);
   imagenesCargadas = end;
 
-  // ===== EVENTO: CLICK EN IMAGEN → AGREGAR AL CARRITO =====
+  // ===== EVENTO: CLICK EN IMAGEN → AGREGAR AL CARRITO + LIGHTBOX =====
   document.querySelectorAll('.gallery-item img').forEach(img => {
     img.addEventListener('click', (e) => {
+      e.preventDefault();
       e.stopPropagation();
+      
       const id = parseInt(e.target.dataset.id);
+      const src = e.target.src;
+      
+      // 1. Agregar al carrito
       agregarAlCarrito(id);
       
-      // También abrir el lightbox para que vea la imagen grande
-      const src = e.target.src;
+      // 2. Abrir lightbox sin perder posición
       abrirLightbox(src);
     });
   });
@@ -133,6 +140,7 @@ function renderGaleria(cantidad) {
   // ===== EVENTO: BOTÓN AGREGAR AL CARRITO =====
   document.querySelectorAll('.btn-add').forEach(btn => {
     btn.addEventListener('click', (e) => {
+      e.preventDefault();
       e.stopPropagation();
       const id = parseInt(e.target.dataset.id || e.target.closest('.btn-add').dataset.id);
       agregarAlCarrito(id);
@@ -231,7 +239,12 @@ function cambiarCantidad(index, cambio) {
 // ============================================
 
 function mostrarNotificacion(mensaje) {
+  // Eliminar notificaciones anteriores
+  const existingToasts = document.querySelectorAll('.custom-toast');
+  existingToasts.forEach(toast => toast.remove());
+
   const toast = document.createElement('div');
+  toast.className = 'custom-toast';
   toast.style.cssText = `
     position: fixed;
     bottom: 30px;
@@ -242,7 +255,7 @@ function mostrarNotificacion(mensaje) {
     border-radius: 12px;
     font-weight: 600;
     box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-    z-index: 9999;
+    z-index: 99999;
     animation: slideUp 0.4s ease;
     font-family: 'Quicksand', sans-serif;
   `;
@@ -373,7 +386,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 });
 
 // ============================================
-// ===== LIGHTBOX MEJORADO =====
+// ===== LIGHTBOX MEJORADO (SIN PERDER POSICIÓN) =====
 // ============================================
 
 const lightbox = document.getElementById('lightbox');
@@ -382,6 +395,9 @@ let currentImageIndex = 0;
 let galleryImages = [];
 
 function abrirLightbox(src) {
+  // Guardar la posición actual del scroll
+  scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+  
   // Obtener todas las imágenes de la galería
   const items = document.querySelectorAll('.gallery-item img');
   galleryImages = Array.from(items).map(img => img.src);
@@ -397,12 +413,25 @@ function abrirLightbox(src) {
   // Mostrar la imagen en el lightbox
   lightboxImg.src = galleryImages[currentImageIndex];
   lightbox.classList.add('active');
+  
+  // Bloquear el scroll del body pero mantener la posición
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${scrollPosition}px`;
+  document.body.style.width = '100%';
   document.body.style.overflow = 'hidden';
 }
 
 function cerrarLightbox() {
   lightbox.classList.remove('active');
-  document.body.style.overflow = 'auto';
+  
+  // Restaurar el scroll a la posición guardada
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.width = '';
+  document.body.style.overflow = '';
+  
+  // Volver a la posición exacta donde estaba
+  window.scrollTo(0, scrollPosition);
 }
 
 function cambiarImagen(direccion) {
@@ -412,28 +441,43 @@ function cambiarImagen(direccion) {
 }
 
 // ===== EVENTOS DEL LIGHTBOX =====
-document.getElementById('lightboxClose').addEventListener('click', cerrarLightbox);
+document.getElementById('lightboxClose').addEventListener('click', (e) => {
+  e.preventDefault();
+  cerrarLightbox();
+});
 
 document.getElementById('lightboxPrev').addEventListener('click', (e) => {
+  e.preventDefault();
   e.stopPropagation();
   cambiarImagen(-1);
 });
 
 document.getElementById('lightboxNext').addEventListener('click', (e) => {
+  e.preventDefault();
   e.stopPropagation();
   cambiarImagen(1);
 });
 
 // ===== TECLAS DEL TECLADO =====
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') cerrarLightbox();
-  if (e.key === 'ArrowLeft') cambiarImagen(-1);
-  if (e.key === 'ArrowRight') cambiarImagen(1);
+  if (e.key === 'Escape') {
+    if (lightbox.classList.contains('active')) {
+      cerrarLightbox();
+    }
+  }
+  if (e.key === 'ArrowLeft' && lightbox.classList.contains('active')) {
+    cambiarImagen(-1);
+  }
+  if (e.key === 'ArrowRight' && lightbox.classList.contains('active')) {
+    cambiarImagen(1);
+  }
 });
 
 // ===== CERRAR AL HACER CLICK FUERA =====
 lightbox.addEventListener('click', (e) => {
-  if (e.target === lightbox) cerrarLightbox();
+  if (e.target === lightbox) {
+    cerrarLightbox();
+  }
 });
 
 // ============================================
@@ -445,12 +489,12 @@ let touchEndX = 0;
 
 lightbox.addEventListener('touchstart', (e) => {
   touchStartX = e.changedTouches[0].screenX;
-});
+}, { passive: true });
 
 lightbox.addEventListener('touchend', (e) => {
   touchEndX = e.changedTouches[0].screenX;
   handleSwipe();
-});
+}, { passive: true });
 
 function handleSwipe() {
   const swipeThreshold = 50;
