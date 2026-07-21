@@ -169,7 +169,7 @@ function agregarAlCarrito(id) {
 }
 
 // ============================================
-// ===== ELIMINAR DEL CARRITO (NUEVO) =====
+// ===== ELIMINAR DEL CARRITO =====
 // ============================================
 
 function eliminarDelCarrito(index) {
@@ -450,6 +450,8 @@ function actualizarBotonLightbox() {
   if (producto && btn) {
     btn.innerHTML = `<i class="fas fa-shopping-cart"></i> Agregar ${producto.nombre} - $${producto.precio.toFixed(2)}`;
     btn.style.display = 'block';
+    btn.style.visibility = 'visible';
+    btn.style.opacity = '1';
   } else if (btn) {
     btn.style.display = 'none';
   }
@@ -470,22 +472,44 @@ function cerrarLightbox() {
 
 function cambiarImagen(direccion) {
   if (galleryImages.length === 0) return;
+  
+  // Calcular el nuevo índice
   currentImageIndex = (currentImageIndex + direccion + galleryImages.length) % galleryImages.length;
+  
+  // Actualizar la imagen mostrada
   lightboxImg.src = galleryImages[currentImageIndex];
   
-  // Actualizar el ID del producto actual
-  const imgElement = document.querySelector(`img[src="${galleryImages[currentImageIndex]}"]`);
+  // BUSCAR EL ID DEL PRODUCTO CORRECTO PARA LA IMAGEN ACTUAL
+  // Usamos el nombre del archivo para encontrar el producto
+  const currentSrc = galleryImages[currentImageIndex];
+  const imgElement = document.querySelector(`img[src="${currentSrc}"]`);
+  
   if (imgElement) {
     currentProductId = parseInt(imgElement.dataset.id);
-    actualizarBotonLightbox();
+  } else {
+    // Si no encuentra el elemento, buscar por el nombre del archivo
+    const fileName = currentSrc.split('/').pop();
+    const numero = parseInt(fileName);
+    if (!isNaN(numero)) {
+      currentProductId = numero;
+    }
   }
+  
+  // Actualizar el botón con el nuevo producto
+  actualizarBotonLightbox();
 }
 
 // ===== AGREGAR AL CARRITO DESDE LIGHTBOX =====
 function agregarDesdeLightbox() {
   if (currentProductId) {
     agregarAlCarrito(currentProductId);
-    // No cerramos el lightbox para que siga viendo
+    // Mostrar una notificación adicional
+    const producto = productos.find(p => p.id === currentProductId);
+    if (producto) {
+      mostrarNotificacion(`✅ ${producto.nombre} añadido al carrito`);
+    }
+  } else {
+    mostrarNotificacion('⚠️ No se pudo agregar el producto');
   }
 }
 
@@ -522,9 +546,11 @@ document.addEventListener('keydown', (e) => {
     }
   }
   if (e.key === 'ArrowLeft' && lightbox.classList.contains('active')) {
+    e.preventDefault();
     cambiarImagen(-1);
   }
   if (e.key === 'ArrowRight' && lightbox.classList.contains('active')) {
+    e.preventDefault();
     cambiarImagen(1);
   }
 });
