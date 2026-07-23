@@ -3,10 +3,9 @@
 // =============================================
 const CONFIG = {
     whatsappNumber: "9161234567", // <-- CAMBIA ESTO POR TU NÚMERO REAL
-    defaultMessage: "¡Hola! Me encantó este arreglo floral y me gustaría hacer un pedido:",
     businessName: "Irmas Flowers",
     currency: "$",
-    itemsPerPage: 10 // Cantidad de imágenes que se muestran por carga
+    itemsPerPage: 10
 };
 
 // =============================================
@@ -15,7 +14,6 @@ const CONFIG = {
 const TOTAL_IMAGES = 37;
 const arreglos = Array.from({ length: TOTAL_IMAGES }, (_, i) => {
     const num = i + 1;
-    // Precios variados entre $25 y $120
     const precios = [25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120];
     const precio = precios[num % precios.length] + (num % 5 === 0 ? 0 : 5);
     
@@ -44,10 +42,8 @@ const countBadge = document.getElementById('countBadge');
 // RENDERIZAR GALERÍA
 // =============================================
 function renderGallery() {
-    // Limpiar el grid por si acaso
     galleryGrid.innerHTML = '';
     currentPage = 1;
-    
     const start = 0;
     const end = Math.min(itemsPerPage, arreglos.length);
     renderItems(start, end);
@@ -75,14 +71,11 @@ function renderItems(start, end) {
             <div class="gallery-item-number">#${arreglo.id}</div>
         `;
         
-        // Evento para abrir el modal
         div.addEventListener('click', (e) => {
-            // Evitar que el botón interno dispare dos veces
             if (e.target.closest('.gallery-item-select')) return;
             openModal(arreglo);
         });
         
-        // Evento específico para el botón "Ver detalles"
         const selectBtn = div.querySelector('.gallery-item-select');
         selectBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -97,7 +90,6 @@ function loadMore() {
     const start = currentPage * itemsPerPage;
     const end = Math.min(start + itemsPerPage, arreglos.length);
     
-    // Verificar si ya no hay más imágenes
     if (start >= arreglos.length) {
         loadMoreBtn.disabled = true;
         loadMoreBtn.innerHTML = '<i class="fas fa-check-circle"></i> Todos los arreglos cargados';
@@ -105,12 +97,10 @@ function loadMore() {
         return;
     }
     
-    // Renderizar las siguientes imágenes
     renderItems(start, end);
     currentPage++;
     updateLoadMoreInfo();
     
-    // Scroll suave a los nuevos elementos
     setTimeout(() => {
         const lastItem = galleryGrid.lastElementChild;
         if (lastItem) {
@@ -140,7 +130,7 @@ function updateLoadMoreInfo() {
 }
 
 // =============================================
-// MODAL SIMPLE (SOLO LA FOTO SELECCIONADA)
+// MODAL CON FORMULARIO
 // =============================================
 const modal = document.getElementById('modal');
 const modalImage = document.getElementById('modalImage');
@@ -150,30 +140,139 @@ const modalDescription = document.getElementById('modalDescription');
 const modalPrice = document.getElementById('modalPrice');
 const orderBtn = document.getElementById('orderBtn');
 const payBtn = document.getElementById('payBtn');
+const notaEspecial = document.getElementById('notaEspecial');
+const extraCheckboxes = document.querySelectorAll('.extra-checkbox');
+const totalPriceSpan = document.getElementById('totalPrice');
 
 let currentArreglo = null;
+let basePrice = 0;
 
+// =============================================
+// CÁLCULO DEL TOTAL CON EXTRAS
+// =============================================
+function calculateTotal() {
+    let extrasTotal = 0;
+    let extrasList = [];
+    
+    extraCheckboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            const price = parseFloat(checkbox.dataset.price);
+            const name = checkbox.dataset.extra;
+            extrasTotal += price;
+            extrasList.push(name);
+        }
+    });
+    
+    const total = basePrice + extrasTotal;
+    totalPriceSpan.textContent = `${CONFIG.currency}${total.toFixed(2)}`;
+    
+    return { total, extrasList, extrasTotal };
+}
+
+// Evento para recalcular al marcar/desmarcar extras
+extraCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', calculateTotal);
+});
+
+// Evento para la nota especial (no recalcula, solo se usa en el mensaje)
+notaEspecial.addEventListener('input', () => {
+    // Solo guardamos el valor para el mensaje
+});
+
+// =============================================
+// ABRIR MODAL
+// =============================================
 function openModal(arreglo) {
     if (!arreglo) return;
     currentArreglo = arreglo;
+    basePrice = arreglo.precio;
     
-    // Actualizar contenido del modal
+    // Resetear formulario
+    notaEspecial.value = '';
+    extraCheckboxes.forEach(cb => cb.checked = false);
+    
+    // Actualizar contenido
     modalImage.src = arreglo.imagen;
     modalImage.alt = arreglo.nombre;
     modalTitle.textContent = arreglo.nombre;
     modalDescription.textContent = arreglo.descripcion;
     modalPrice.textContent = `${CONFIG.currency}${arreglo.precio}`;
+    
+    // Calcular total inicial
+    calculateTotal();
 
     modal.classList.add('show');
     document.body.style.overflow = 'hidden';
-    
-    // Configurar botón de WhatsApp
-    const mensaje = encodeURIComponent(
-        `${CONFIG.defaultMessage}\n\n🌸 *${arreglo.nombre}*\n💰 Precio: ${CONFIG.currency}${arreglo.precio}\n📍 ${CONFIG.businessName}\n\n¿Podrías darme más información sobre este arreglo?`
-    );
-    orderBtn.href = `https://wa.me/${CONFIG.whatsappNumber}?text=${mensaje}`;
 }
 
+// =============================================
+// GENERAR MENSAJE PARA WHATSAPP
+// =============================================
+function generateWhatsAppMessage() {
+    if (!currentArreglo) return '';
+    
+    const { total, extrasList, extrasTotal } = calculateTotal();
+    const nota = notaEspecial.value.trim();
+    
+    let mensaje = `${CONFIG.defaultMessage}\n\n`;
+    mensaje += `🌸 *${currentArreglo.nombre}*\n`;
+    mensaje += `💰 Precio base: ${CONFIG.currency}${currentArreglo.precio}\n`;
+    
+    if (extrasList.length > 0) {
+        mensaje += `\n🎁 *Extras seleccionados:*\n`;
+        extrasList.forEach(extra => {
+            mensaje += `  ✓ ${extra}\n`;
+        });
+        mensaje += `💰 Extras: ${CONFIG.currency}${extrasTotal.toFixed(2)}\n`;
+    }
+    
+    mensaje += `\n💲 *Total: ${CONFIG.currency}${total.toFixed(2)}*\n`;
+    
+    if (nota) {
+        mensaje += `\n📝 *Nota especial:*\n"${nota}"\n`;
+    }
+    
+    mensaje += `\n📍 ${CONFIG.businessName}\n`;
+    mensaje += `\n¿Podrías confirmarme el pedido?`;
+    
+    return encodeURIComponent(mensaje);
+}
+
+// =============================================
+// EVENTO DEL BOTÓN WHATSAPP
+// =============================================
+orderBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (!currentArreglo) return;
+    
+    const mensaje = generateWhatsAppMessage();
+    const url = `https://wa.me/${CONFIG.whatsappNumber}?text=${mensaje}`;
+    window.open(url, '_blank');
+});
+
+// =============================================
+// BOTÓN DE PAGO
+// =============================================
+payBtn.addEventListener('click', () => {
+    if (!currentArreglo) return;
+    const { total, extrasList } = calculateTotal();
+    const nota = notaEspecial.value.trim();
+    
+    let mensaje = `🛒 Pedido: ${currentArreglo.nombre}\n`;
+    mensaje += `💰 Total: ${CONFIG.currency}${total.toFixed(2)}\n`;
+    if (extrasList.length > 0) {
+        mensaje += `🎁 Extras: ${extrasList.join(', ')}\n`;
+    }
+    if (nota) {
+        mensaje += `📝 Nota: "${nota}"\n`;
+    }
+    
+    alert(`🛒 Procesando pago para:\n\n${mensaje}\n\n💡 Por ahora, contacta por WhatsApp para completar tu pedido.\n\nPróximamente tendremos pagos integrados.`);
+});
+
+// =============================================
+// CERRAR MODAL
+// =============================================
 function closeModal() {
     modal.classList.remove('show');
     document.body.style.overflow = '';
@@ -188,17 +287,8 @@ document.addEventListener('keydown', (e) => {
 });
 
 // =============================================
-// BOTÓN DE PAGO
-// =============================================
-payBtn.addEventListener('click', () => {
-    if (!currentArreglo) return;
-    alert(`🛒 Procesando pago para: ${currentArreglo.nombre}\n💰 Total: ${CONFIG.currency}${currentArreglo.precio}\n\nPor ahora, por favor contacta por WhatsApp para completar tu pedido.\n\n💡 Próximamente tendremos pagos integrados.`);
-});
-
-// =============================================
 // EVENTOS
 // =============================================
-// Asegurar que el botón "Ver más" funcione correctamente
 loadMoreBtn.addEventListener('click', function(e) {
     e.preventDefault();
     loadMore();
@@ -213,5 +303,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 console.log(`🌸 ${CONFIG.businessName} - Web cargada correctamente`);
 console.log(`📸 ${arreglos.length} arreglos florales disponibles`);
-console.log(`📋 Mostrando ${itemsPerPage} arreglos por carga`);
-console.log('✅ Botón "Ver más" funcionando correctamente');
+console.log('✅ Formulario de personalización activo');
