@@ -33,11 +33,9 @@ const arreglos = Array.from({ length: TOTAL_IMAGES }, (_, i) => {
 // =============================================
 let currentPage = 0;
 const itemsPerPage = CONFIG.itemsPerPage;
-let selectedId = null;
 
 const galleryGrid = document.getElementById('galleryGrid');
 const loadMoreBtn = document.getElementById('loadMoreBtn');
-const loadMoreContainer = document.getElementById('loadMoreContainer');
 const showingCount = document.getElementById('showingCount');
 const totalCount = document.getElementById('totalCount');
 const countBadge = document.getElementById('countBadge');
@@ -122,10 +120,10 @@ function updateLoadMoreInfo() {
 }
 
 // =============================================
-// MODAL EN CUADRÍCULA
+// MODAL SIMPLE (SOLO LA FOTO SELECCIONADA)
 // =============================================
 const modal = document.getElementById('modal');
-const modalGrid = document.getElementById('modalGrid');
+const modalImage = document.getElementById('modalImage');
 const modalClose = document.getElementById('modalClose');
 const modalTitle = document.getElementById('modalTitle');
 const modalDescription = document.getElementById('modalDescription');
@@ -138,68 +136,13 @@ let currentArreglo = null;
 function openModal(arreglo) {
     if (!arreglo) return;
     currentArreglo = arreglo;
-    selectedId = arreglo.id;
     
     // Actualizar contenido del modal
+    modalImage.src = arreglo.imagen;
+    modalImage.alt = arreglo.nombre;
     modalTitle.textContent = arreglo.nombre;
     modalDescription.textContent = arreglo.descripcion;
     modalPrice.textContent = `${CONFIG.currency}${arreglo.precio}`;
-    
-    // Generar grid de imágenes (foto principal + 4 relacionadas)
-    const imagenesRelacionadas = getRelatedImages(arreglo.id);
-    modalGrid.innerHTML = `
-        <div class="modal-grid-item modal-main">
-            <img src="${arreglo.imagen}" alt="${arreglo.nombre}" />
-        </div>
-        ${imagenesRelacionadas.map(img => `
-            <div class="modal-grid-item modal-thumb">
-                <img src="${img.imagen}" alt="${img.nombre}" data-id="${img.id}" />
-                <div class="modal-thumb-price">${CONFIG.currency}${img.precio}</div>
-            </div>
-        `).join('')}
-    `;
-
-    // Evento para abrir el detalle de la miniatura seleccionada
-    modalGrid.querySelectorAll('.modal-thumb img').forEach(img => {
-        img.addEventListener('click', () => {
-            const id = parseInt(img.dataset.id);
-            const arregloEncontrado = arreglos.find(a => a.id === id);
-            if (arregloEncontrado) {
-                closeModal();
-                // Esperar a que se cierre el modal y abrir el seleccionado
-                setTimeout(() => {
-                    // Buscar el elemento en la galería y hacer scroll
-                    const items = galleryGrid.querySelectorAll('.gallery-item');
-                    let found = false;
-                    items.forEach(item => {
-                        if (parseInt(item.dataset.id) === id) {
-                            item.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            // Simular clic para abrir modal
-                            setTimeout(() => openModal(arregloEncontrado), 400);
-                            found = true;
-                        }
-                    });
-                    // Si no está cargado, cargar más hasta encontrarlo
-                    if (!found) {
-                        // Cargar todas las imágenes restantes
-                        const remaining = arreglos.length - galleryGrid.children.length;
-                        if (remaining > 0) {
-                            loadAllRemaining();
-                            setTimeout(() => {
-                                const items = galleryGrid.querySelectorAll('.gallery-item');
-                                items.forEach(item => {
-                                    if (parseInt(item.dataset.id) === id) {
-                                        item.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                        setTimeout(() => openModal(arregloEncontrado), 400);
-                                    }
-                                });
-                            }, 500);
-                        }
-                    }
-                }, 300);
-            }
-        });
-    });
 
     modal.classList.add('show');
     document.body.style.overflow = 'hidden';
@@ -209,34 +152,6 @@ function openModal(arreglo) {
         `${CONFIG.defaultMessage}\n\n🌸 *${arreglo.nombre}*\n💰 Precio: ${CONFIG.currency}${arreglo.precio}\n📍 ${CONFIG.businessName}\n\n¿Podrías darme más información sobre este arreglo?`
     );
     orderBtn.href = `https://wa.me/${CONFIG.whatsappNumber}?text=${mensaje}`;
-}
-
-function loadAllRemaining() {
-    const start = galleryGrid.children.length;
-    const end = arreglos.length;
-    renderItems(start, end);
-    currentPage = Math.ceil(arreglos.length / itemsPerPage);
-    updateLoadMoreInfo();
-}
-
-function getRelatedImages(id) {
-    const index = arreglos.findIndex(a => a.id === id);
-    const related = [];
-    const offsets = [-2, -1, 1, 2];
-    offsets.forEach(offset => {
-        const newIndex = index + offset;
-        if (newIndex >= 0 && newIndex < arreglos.length) {
-            related.push(arreglos[newIndex]);
-        }
-    });
-    // Si no hay suficientes, rellenar con las primeras
-    while (related.length < 4) {
-        const randomIndex = Math.floor(Math.random() * arreglos.length);
-        if (!related.includes(arreglos[randomIndex]) && arreglos[randomIndex].id !== id) {
-            related.push(arreglos[randomIndex]);
-        }
-    }
-    return related.slice(0, 4);
 }
 
 function closeModal() {
@@ -262,8 +177,7 @@ payBtn.addEventListener('click', () => {
 
 // =============================================
 // EVENTOS
-// =============================================
-loadMoreBtn.addEventListener('click', loadMore);
+// =============================================loadMoreBtn.addEventListener('click', loadMore);
 
 // =============================================
 // INICIALIZAR
