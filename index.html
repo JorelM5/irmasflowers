@@ -41,34 +41,24 @@
         </div>
     </section>
 
-    <!-- ===== GALERÍA ===== -->
+    <!-- ===== GALERÍA EN CUADRÍCULA ===== -->
     <section class="gallery" id="galeria">
         <div class="container">
             <h2 class="section-title">Nuestros Arreglos</h2>
-            <p class="section-subtitle">Desliza para ver todos nuestros arreglos. Toca cualquier imagen para seleccionarla.</p>
+            <p class="section-subtitle">Toca cualquier imagen para ver los detalles y hacer tu pedido</p>
             
-            <!-- Contenedor del Lightbox (carrusel táctil) -->
-            <div class="lightbox-container" id="lightboxContainer">
-                <div class="lightbox-track" id="lightboxTrack">
-                    <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
-                </div>
-                <!-- Indicadores de página -->
-                <div class="lightbox-indicators" id="lightboxIndicators"></div>
-                <!-- Flechas de navegación (para escritorio) -->
-                <button class="lightbox-arrow lightbox-arrow-prev" id="prevBtn" aria-label="Anterior">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="lightbox-arrow lightbox-arrow-next" id="nextBtn" aria-label="Siguiente">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
+            <!-- Grid de imágenes -->
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
             </div>
 
-            <!-- Botón para seleccionar la imagen actual -->
-            <div class="selection-area">
-                <button class="btn btn-select" id="selectBtn">
-                    <i class="fas fa-check-circle"></i> Seleccionar este arreglo
+            <!-- Botón "Ver más" -->
+            <div class="load-more-container" id="loadMoreContainer">
+                <button class="btn-load-more" id="loadMoreBtn">
+                    <i class="fas fa-plus-circle"></i> Ver más arreglos
+                    <span class="count-badge" id="countBadge">0</span>
                 </button>
-                <p class="selection-hint" id="selectionHint">Toca una imagen para seleccionarla</p>
+                <p class="load-more-info" id="loadMoreInfo">Mostrando <span id="showingCount">0</span> de <span id="totalCount">0</span> arreglos</p>
             </div>
         </div>
     </section>
@@ -78,7 +68,7 @@
         <div class="modal-content">
             <span class="modal-close" id="modalClose">&times;</span>
             
-            <!-- Grid de imágenes -->
+            <!-- Grid de imágenes del modal -->
             <div class="modal-grid" id="modalGrid">
                 <!-- Se genera dinámicamente con JavaScript -->
             </div>
