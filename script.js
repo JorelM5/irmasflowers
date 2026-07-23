@@ -2,7 +2,7 @@
 // CONFIGURACIÓN DE LA FLORISTERÍA
 // =============================================
 const CONFIG = {
-    whatsappNumber: "9161234567", // <-- CAMBIA ESTO POR TU NÚMERO REAL
+    whatsappNumber: "9165413044", // <-- CAMBIA ESTO POR TU NÚMERO REAL
     businessName: "Irmas Flowers",
     currency: "$",
     itemsPerPage: 10
