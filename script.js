@@ -11,7 +11,7 @@ const CONFIG = {
 };
 
 // =============================================
-// DATOS DE LOS ARREGLOS (37 imágenes)
+// DATOS DE LOS ARREGLOS (32 imágenes)
 // =============================================
 const arreglos = [
     // Generamos del 1 al 37
@@ -21,7 +21,7 @@ const arreglos = [
             id: num,
             nombre: `Arreglo floral #${num}`,
             descripcion: `Hermoso arreglo floral con flores frescas seleccionadas especialmente para ti. Ideal para cualquier ocasión especial.`,
-            imagen: `img/${num}irmas.jpeg`  // <--- CAMBIADO: ahora es irmas con "s"
+            imagen: `img/${num}irma.jpeg`
         };
     })
 ];
