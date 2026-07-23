@@ -1,207 +1,99 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Irma's Flowers - Floristería en Sacramento</title>
-  <!-- Font Awesome (íconos) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Irmas Flowers</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- Font Awesome para los iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
 </head>
 <body>
 
-  <!-- ========== HEADER / NAVBAR ========== -->
-  <header>
-    <div class="container nav-container">
-      <div class="logo">
-        <i class="fas fa-seedling"></i>
-        <span>Irma's Flowers</span>
-      </div>
-      <nav>
-        <ul class="nav-links">
-          <li><a href="#inicio">Inicio</a></li>
-          <li><a href="#galeria">Tienda</a></li>
-          <li><a href="#ofertas">Ofertas</a></li>
-          <li><a href="#testimonios">Testimonios</a></li>
-          <li><a href="#contacto">Contacto</a></li>
-        </ul>
-        <div class="cart-icon">
-          <i class="fas fa-shopping-cart"></i>
-          <span class="cart-count">0</span>
+    <!-- ===== HEADER ===== -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-seedling"></i>
+                <h1>Irmas Flowers</h1>
+            </div>
+            <div class="header-info">
+                <p><i class="fas fa-phone"></i> <a href="tel:+19161234567">(916) 123-4567</a></p>
+                <p><i class="fas fa-map-marker-alt"></i> 2201 Northgate Blvd, Sacramento, CA 95833</p>
+            </div>
         </div>
-        <div class="menu-toggle" id="menuToggle">
-          <i class="fas fa-bars"></i>
+    </header>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h2>Flores frescas para cada momento</h2>
+            <p>Descubre nuestra colección de arreglos florales hechos con amor y dedicación.</p>
+            <p class="hero-location"><i class="fas fa-map-pin"></i> Sacramento, CA</p>
         </div>
-      </nav>
-    </div>
-  </header>
+    </section>
 
-  <!-- ========== HERO ========== -->
-  <section id="inicio" class="hero">
-    <div class="hero-overlay"></div>
-    <div class="container hero-content">
-      <h1>Flores frescas <br />para cada ocasión</h1>
-      <p>En Irma's Flowers creamos arreglos únicos con amor y dedicación. ¡Haz tu pedido hoy!</p>
-      <a href="#galeria" class="btn-primary">Ver tienda</a>
-    </div>
-  </section>
-
-  <!-- ========== GALERÍA / TIENDA ========== -->
-  <section id="galeria" class="section gallery">
-    <div class="container">
-      <h2 class="section-title">Nuestra tienda</h2>
-      <p class="gallery-subtitle">Explora nuestros arreglos florales, elige tu favorito y agrégalo al carrito</p>
-      <div class="gallery-grid" id="galleryGrid">
-        <!-- Las imágenes se generan con JavaScript -->
-      </div>
-      <div class="gallery-load-more">
-        <button id="loadMoreBtn" class="btn-primary">Ver más arreglos</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== OFERTAS ========== -->
-  <section id="ofertas" class="section offers">
-    <div class="container">
-      <h2 class="section-title">Ofertas especiales</h2>
-      <div class="offers-grid">
-        <div class="offer-card">
-          <i class="fas fa-gift"></i>
-          <h3>20% de descuento</h3>
-          <p>En tu primer pedido usando el código <strong>IRMA20</strong></p>
+    <!-- ===== GALERÍA ===== -->
+    <section class="gallery" id="galeria">
+        <div class="container">
+            <h2 class="section-title">Nuestros Arreglos</h2>
+            <p class="section-subtitle">Haz clic en cualquier imagen para ver los detalles y hacer tu pedido</p>
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
+            </div>
         </div>
-        <div class="offer-card">
-          <i class="fas fa-truck"></i>
-          <h3>Envío gratis</h3>
-          <p>En pedidos superiores a $75</p>
-        </div>
-        <div class="offer-card">
-          <i class="fas fa-calendar-alt"></i>
-          <h3>Suscripción mensual</h3>
-          <p>Recibe flores frescas cada mes con 15% de descuento</p>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ========== TESTIMONIOS ========== -->
-  <section id="testimonios" class="section testimonials">
-    <div class="container">
-      <h2 class="section-title">Lo que dicen nuestros clientes</h2>
-      <div class="testimonial-grid">
-        <div class="testimonial-card">
-          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-          <p>"Las flores llegaron frescas y hermosas. El ramo fue perfecto para el aniversario de mis padres."</p>
-          <h4>— María G.</h4>
+    <!-- ===== MODAL ===== -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <span class="modal-close" id="modalClose">&times;</span>
+            <img id="modalImage" src="" alt="Arreglo floral" />
+            <div class="modal-info">
+                <h3 id="modalTitle">Arreglo floral</h3>
+                <p id="modalDescription">Descripción del arreglo.</p>
+                <div class="modal-buttons">
+                    <button class="btn btn-primary" id="orderBtn">
+                        <i class="fab fa-whatsapp"></i> Pedir por WhatsApp
+                    </button>
+                    <button class="btn btn-secondary" id="payBtn">
+                        <i class="fas fa-credit-card"></i> Pagar ahora
+                    </button>
+                </div>
+            </div>
         </div>
-        <div class="testimonial-card">
-          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-          <p>"Excelente servicio al cliente y una variedad increíble. ¡Mi lugar favorito para comprar flores en Sacramento!"</p>
-          <h4>— Carlos R.</h4>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-info">
+                <h3><i class="fas fa-seedling"></i> Irmas Flowers</h3>
+                <p>2201 Northgate Blvd, Sacramento, CA 95833</p>
+                <p><a href="tel:+19161234567">(916) 123-4567</a></p>
+            </div>
+            <div class="footer-hours">
+                <h4>Horario</h4>
+                <p>Lun - Vie: 9:00 AM - 6:00 PM</p>
+                <p>Sábado: 10:00 AM - 4:00 PM</p>
+                <p>Domingo: Cerrado</p>
+            </div>
+            <div class="footer-social">
+                <h4>Síguenos</h4>
+                <div class="social-icons">
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
         </div>
-        <div class="testimonial-card">
-          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-          <p>"Los arreglos son únicos y muy creativos. Siempre recibo cumplidos cuando regalo sus flores."</p>
-          <h4>— Laura S.</h4>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Irmas Flowers. Todos los derechos reservados.</p>
         </div>
-      </div>
-    </div>
-  </section>
+    </footer>
 
-  <!-- ========== CONTACTO ========== -->
-  <section id="contacto" class="section contact">
-    <div class="container">
-      <h2 class="section-title">Contáctanos</h2>
-      <div class="contact-wrapper">
-        <div class="contact-info">
-          <p><i class="fas fa-map-marker-alt"></i> 2201 Northgate Blvd, Sacramento, CA 95833</p>
-          <p><i class="fas fa-phone-alt"></i> (916) 559-1808</p>
-          <p><i class="fas fa-envelope"></i> info@irmasflowers.com</p>
-          <div class="social-icons">
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-facebook"></i></a>
-            <a href="#"><i class="fab fa-whatsapp"></i></a>
-          </div>
-        </div>
-        <form id="contactForm" class="contact-form">
-          <input type="text" placeholder="Nombre" required />
-          <input type="email" placeholder="Correo electrónico" required />
-          <textarea placeholder="Mensaje" rows="4" required></textarea>
-          <button type="submit" class="btn-primary">Enviar mensaje</button>
-        </form>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== MODAL CARRITO ========== -->
-  <div class="cart-modal" id="cartModal">
-    <div class="cart-modal-content">
-      <span class="cart-close" id="cartClose">&times;</span>
-      <h2>🛒 Tu pedido</h2>
-      <div id="cartItems">
-        <p class="cart-empty">El carrito está vacío</p>
-      </div>
-      <div class="cart-total">
-        <strong>Total: </strong><span id="cartTotal">$0</span>
-      </div>
-      <button class="btn-primary" id="checkoutBtn" style="width:100%; margin-top:20px;">
-        Finalizar pedido
-      </button>
-    </div>
-  </div>
-
-  <!-- ========== MODAL FORMULARIO PEDIDO ========== -->
-  <div class="cart-modal" id="orderModal">
-    <div class="cart-modal-content">
-      <span class="cart-close" id="orderClose">&times;</span>
-      <h2>📝 Completa tu pedido</h2>
-      <form id="orderForm">
-        <input type="text" id="orderName" placeholder="Tu nombre completo" required />
-        <input type="tel" id="orderPhone" placeholder="Teléfono (ej: 9165551234)" required />
-        <input type="email" id="orderEmail" placeholder="Correo electrónico" required />
-        <textarea id="orderAddress" placeholder="Dirección de entrega" rows="3" required></textarea>
-        <textarea id="orderNotes" placeholder="Notas adicionales (opcional)" rows="2"></textarea>
-        <div id="orderSummary" style="background:#f5ede9; padding:15px; border-radius:12px; margin:15px 0;">
-          <!-- Aquí se mostrará el resumen del pedido -->
-        </div>
-        <button type="submit" class="btn-primary" style="width:100%;">
-          Enviar pedido 📩
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ========== MODAL GALERÍA (Lightbox) ========== -->
-  <div class="lightbox" id="lightbox">
-    <span class="lightbox-close" id="lightboxClose">&times;</span>
-    
-    <!-- IMAGEN GRANDE -->
-    <img class="lightbox-img" id="lightboxImg" src="" alt="Arreglo floral" />
-    
-    <!-- NOMBRE DEL PRODUCTO -->
-    <div class="lightbox-product-name" id="lightboxProductName">Nombre del producto</div>
-    
-    <!-- BOTÓN AGREGAR AL CARRITO -->
-    <button class="lightbox-add-btn" id="lightboxAddToCart">
-      <i class="fas fa-shopping-cart"></i> Agregar al carrito
-    </button>
-    
-    <!-- FLECHAS DE NAVEGACIÓN -->
-    <div class="lightbox-nav">
-      <button id="lightboxPrev" class="lightbox-btn">❮</button>
-      <button id="lightboxNext" class="lightbox-btn">❯</button>
-    </div>
-  </div>
-
-  <!-- ========== FOOTER ========== -->
-  <footer>
-    <div class="container">
-      <p>&copy; 2025 Irma's Flowers - Sacramento, CA. Hecho con <i class="fas fa-heart"></i> para ti.</p>
-    </div>
-  </footer>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
