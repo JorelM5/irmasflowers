@@ -63,7 +63,7 @@
         </div>
     </section>
 
-    <!-- ===== MODAL SIMPLE (SOLO LA FOTO SELECCIONADA) ===== -->
+    <!-- ===== MODAL CON FORMULARIO DE PERSONALIZACIÓN ===== -->
     <div class="modal" id="modal">
         <div class="modal-content">
             <span class="modal-close" id="modalClose">&times;</span>
@@ -76,10 +76,58 @@
             <div class="modal-info">
                 <h3 id="modalTitle">Arreglo floral</h3>
                 <p id="modalDescription">Descripción del arreglo.</p>
+                
+                <!-- Precio -->
                 <div class="modal-price-container">
-                    <span class="modal-price-label">Precio:</span>
+                    <span class="modal-price-label">Precio base:</span>
                     <span class="modal-price" id="modalPrice">$0.00</span>
                 </div>
+
+                <!-- ===== FORMULARIO DE PERSONALIZACIÓN ===== -->
+                <div class="modal-form">
+                    <h4><i class="fas fa-pen-fancy"></i> Personaliza tu pedido</h4>
+                    
+                    <!-- Nota especial -->
+                    <div class="form-group">
+                        <label for="notaEspecial">📝 Nota especial (mensaje para incluir con el arreglo)</label>
+                        <textarea id="notaEspecial" rows="3" placeholder="Ej: 'Con cariño para mi mamá en su cumpleaños'"></textarea>
+                    </div>
+
+                    <!-- Extras (checkboxes) -->
+                    <div class="form-group">
+                        <label>🎁 Extras adicionales</label>
+                        <div class="extras-grid">
+                            <label class="extra-item">
+                                <input type="checkbox" class="extra-checkbox" data-extra="Osito de peluche" data-price="15" />
+                                <span>🧸 Osito de peluche <span class="extra-price">+$15</span></span>
+                            </label>
+                            <label class="extra-item">
+                                <input type="checkbox" class="extra-checkbox" data-extra="Caja de chocolates" data-price="12" />
+                                <span>🍫 Chocolates finos <span class="extra-price">+$12</span></span>
+                            </label>
+                            <label class="extra-item">
+                                <input type="checkbox" class="extra-checkbox" data-extra="Globo metálico" data-price="8" />
+                                <span>🎈 Globo metálico <span class="extra-price">+$8</span></span>
+                            </label>
+                            <label class="extra-item">
+                                <input type="checkbox" class="extra-checkbox" data-extra="Tarjeta personalizada" data-price="5" />
+                                <span>💌 Tarjeta personalizada <span class="extra-price">+$5</span></span>
+                            </label>
+                            <label class="extra-item">
+                                <input type="checkbox" class="extra-checkbox" data-extra="Entrega express" data-price="10" />
+                                <span>🚀 Entrega express (2hrs) <span class="extra-price">+$10</span></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Precio total actualizado -->
+                    <div class="form-total">
+                        <span>Total con extras:</span>
+                        <span class="form-total-price" id="totalPrice">$0.00</span>
+                    </div>
+                </div>
+
+                <!-- Botones -->
                 <div class="modal-buttons">
                     <button class="btn btn-primary" id="orderBtn">
                         <i class="fab fa-whatsapp"></i> Pedir por WhatsApp
