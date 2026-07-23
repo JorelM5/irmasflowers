@@ -315,4 +315,20 @@ document.addEventListener('keydown', (e) => {
 // =============================================
 payBtn.addEventListener('click', () => {
     if (!currentArreglo) return;
-    alert(`🛒 Procesando pago para: ${
+    alert(`🛒 Procesando pago para: ${currentArreglo.nombre}\n\nPor ahora, por favor contacta por WhatsApp para completar tu pedido.\n\n💡 Próximamente tendremos pagos integrados.`);
+});
+
+// =============================================
+// INICIALIZAR
+// =============================================
+document.addEventListener('DOMContentLoaded', () => {
+    renderLightbox();
+    // Seleccionar automáticamente la primera imagen al cargar
+    setTimeout(() => {
+        selectCurrent();
+    }, 500);
+});
+
+console.log(`🌸 ${CONFIG.businessName} - Web cargada correctamente`);
+console.log(`📸 ${arreglos.length} arreglos florales disponibles`);
+console.log('💡 Desliza para ver los arreglos, toca "Seleccionar" para elegir uno');
