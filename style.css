@@ -374,7 +374,7 @@ header {
     color: var(--primary);
 }
 
-/* ===== MODAL SIMPLE (SOLO LA FOTO SELECCIONADA) ===== */
+/* ===== MODAL CON FORMULARIO ===== */
 .modal {
     display: none;
     position: fixed;
@@ -403,7 +403,7 @@ header {
 .modal-content {
     background: var(--white);
     border-radius: var(--radius);
-    max-width: 600px;
+    max-width: 650px;
     width: 100%;
     max-height: 95vh;
     overflow-y: auto;
@@ -438,10 +438,10 @@ header {
     transform: rotate(90deg);
 }
 
-/* Imagen principal del modal (ocupa todo el ancho) */
+/* Imagen principal del modal */
 .modal-image-container {
     width: 100%;
-    max-height: 500px;
+    max-height: 400px;
     overflow: hidden;
     background: #f0ece8;
     border-radius: var(--radius) var(--radius) 0 0;
@@ -450,7 +450,7 @@ header {
 .modal-image-container img {
     width: 100%;
     height: 100%;
-    max-height: 500px;
+    max-height: 400px;
     object-fit: contain;
     display: block;
     background: #f0ece8;
@@ -475,8 +475,8 @@ header {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 20px;
-    padding: 12px 16px;
+    margin-bottom: 16px;
+    padding: 10px 16px;
     background: var(--secondary);
     border-radius: 12px;
 }
@@ -484,16 +484,125 @@ header {
 .modal-price-label {
     font-weight: 600;
     color: var(--dark);
-    font-size: 1rem;
+    font-size: 0.95rem;
 }
 
 .modal-price {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 700;
     color: var(--primary);
     font-family: 'Playfair Display', serif;
 }
 
+/* ===== FORMULARIO DE PERSONALIZACIÓN ===== */
+.modal-form {
+    background: #f8f5f2;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 18px;
+}
+
+.modal-form h4 {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 14px;
+}
+
+.modal-form h4 i {
+    color: var(--primary);
+    margin-right: 8px;
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 6px;
+}
+
+.form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid #e0dbd5;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    resize: vertical;
+    transition: var(--transition);
+    background: var(--white);
+}
+
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(45, 90, 75, 0.15);
+}
+
+.extras-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.extra-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: var(--white);
+    border-radius: 10px;
+    border: 2px solid #e0dbd5;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.9rem;
+}
+
+.extra-item:hover {
+    border-color: var(--primary-light);
+    background: #f0f5f3;
+}
+
+.extra-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.extra-item .extra-price {
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 0.8rem;
+    margin-left: auto;
+}
+
+.form-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--white);
+    border-radius: 10px;
+    border: 2px solid var(--primary);
+    font-weight: 600;
+    font-size: 1.05rem;
+}
+
+.form-total-price {
+    color: var(--primary);
+    font-size: 1.3rem;
+    font-family: 'Playfair Display', serif;
+}
+
+/* ===== BOTONES DEL MODAL ===== */
 .modal-buttons {
     display: flex;
     gap: 14px;
@@ -609,7 +718,7 @@ footer {
 }
 
 /* ============================================================
-   RESPONSIVE - MÓVIL (FOTOS MÁS PEQUEÑAS)
+   RESPONSIVE
    ============================================================ */
 
 /* Tablets y móviles grandes */
@@ -655,9 +764,8 @@ footer {
         font-size: 0.95rem;
     }
     
-    /* GALERÍA EN MÓVIL - FOTOS MÁS PEQUEÑAS */
     .gallery-grid {
-        grid-template-columns: repeat(3, 1fr); /* 3 columnas en móvil */
+        grid-template-columns: repeat(3, 1fr);
         gap: 10px;
     }
     
@@ -673,7 +781,6 @@ footer {
         padding: 2px 8px;
     }
     
-    /* Overlay siempre visible en móvil (no solo hover) */
     .gallery-item-overlay {
         opacity: 1;
         padding: 30px 10px 10px;
@@ -699,7 +806,6 @@ footer {
         font-size: 0.6rem;
     }
     
-    /* Botón Ver más en móvil */
     .btn-load-more {
         padding: 12px 20px;
         font-size: 0.95rem;
@@ -717,19 +823,19 @@ footer {
         font-size: 0.8rem;
     }
     
-    /* MODAL en móvil - más pequeño */
+    /* Modal en móvil */
     .modal-content {
         max-width: 95%;
         border-radius: 12px;
     }
     
     .modal-image-container {
-        max-height: 350px;
+        max-height: 280px;
         border-radius: 12px 12px 0 0;
     }
     
     .modal-image-container img {
-        max-height: 350px;
+        max-height: 280px;
     }
     
     .modal-close {
@@ -753,12 +859,47 @@ footer {
     }
     
     .modal-price-container {
-        padding: 10px 14px;
-        margin-bottom: 14px;
+        padding: 8px 14px;
+        margin-bottom: 12px;
     }
     
     .modal-price {
         font-size: 1.2rem;
+    }
+    
+    /* Formulario en móvil */
+    .modal-form {
+        padding: 12px 14px;
+        margin-bottom: 14px;
+    }
+    
+    .modal-form h4 {
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+    }
+    
+    .extras-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+    }
+    
+    .extra-item {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+        gap: 6px;
+    }
+    
+    .extra-item .extra-price {
+        font-size: 0.7rem;
+    }
+    
+    .form-total {
+        font-size: 0.95rem;
+        padding: 10px 14px;
+    }
+    
+    .form-total-price {
+        font-size: 1.1rem;
     }
     
     .modal-buttons {
@@ -804,7 +945,6 @@ footer {
         margin-top: 10px;
     }
     
-    /* 3 columnas pero más pequeñas */
     .gallery-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 8px;
@@ -841,10 +981,14 @@ footer {
     }
     
     .modal-image-container {
-        max-height: 280px;
+        max-height: 220px;
     }
     
     .modal-image-container img {
-        max-height: 280px;
+        max-height: 220px;
+    }
+    
+    .extras-grid {
+        grid-template-columns: 1fr;
     }
 }
