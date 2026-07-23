@@ -31,7 +31,7 @@ const arreglos = Array.from({ length: TOTAL_IMAGES }, (_, i) => {
 // =============================================
 // ESTADO DE LA GALERÍA
 // =============================================
-let currentPage = 0;
+let currentPage = 1;
 const itemsPerPage = CONFIG.itemsPerPage;
 
 const galleryGrid = document.getElementById('galleryGrid');
@@ -44,9 +44,12 @@ const countBadge = document.getElementById('countBadge');
 // RENDERIZAR GALERÍA
 // =============================================
 function renderGallery() {
+    // Limpiar el grid por si acaso
+    galleryGrid.innerHTML = '';
+    currentPage = 1;
+    
     const start = 0;
     const end = Math.min(itemsPerPage, arreglos.length);
-    currentPage = 1;
     renderItems(start, end);
     updateLoadMoreInfo();
 }
@@ -73,7 +76,16 @@ function renderItems(start, end) {
         `;
         
         // Evento para abrir el modal
-        div.addEventListener('click', () => {
+        div.addEventListener('click', (e) => {
+            // Evitar que el botón interno dispare dos veces
+            if (e.target.closest('.gallery-item-select')) return;
+            openModal(arreglo);
+        });
+        
+        // Evento específico para el botón "Ver detalles"
+        const selectBtn = div.querySelector('.gallery-item-select');
+        selectBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
             openModal(arreglo);
         });
         
@@ -85,21 +97,26 @@ function loadMore() {
     const start = currentPage * itemsPerPage;
     const end = Math.min(start + itemsPerPage, arreglos.length);
     
+    // Verificar si ya no hay más imágenes
     if (start >= arreglos.length) {
         loadMoreBtn.disabled = true;
-        loadMoreBtn.innerHTML = '<i class="fas fa-check"></i> Todos los arreglos cargados';
+        loadMoreBtn.innerHTML = '<i class="fas fa-check-circle"></i> Todos los arreglos cargados';
+        countBadge.style.display = 'none';
         return;
     }
     
+    // Renderizar las siguientes imágenes
     renderItems(start, end);
     currentPage++;
     updateLoadMoreInfo();
     
     // Scroll suave a los nuevos elementos
-    const lastItem = galleryGrid.lastElementChild;
-    if (lastItem) {
-        lastItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
+    setTimeout(() => {
+        const lastItem = galleryGrid.lastElementChild;
+        if (lastItem) {
+            lastItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, 300);
 }
 
 function updateLoadMoreInfo() {
@@ -107,7 +124,9 @@ function updateLoadMoreInfo() {
     const total = arreglos.length;
     showingCount.textContent = showing;
     totalCount.textContent = total;
-    countBadge.textContent = total - showing;
+    
+    const remaining = total - showing;
+    countBadge.textContent = remaining;
     
     if (showing >= total) {
         loadMoreBtn.disabled = true;
@@ -115,6 +134,7 @@ function updateLoadMoreInfo() {
         countBadge.style.display = 'none';
     } else {
         loadMoreBtn.disabled = false;
+        loadMoreBtn.innerHTML = `<i class="fas fa-plus-circle"></i> Ver más arreglos <span class="count-badge">${remaining}</span>`;
         countBadge.style.display = 'inline-block';
     }
 }
@@ -177,7 +197,12 @@ payBtn.addEventListener('click', () => {
 
 // =============================================
 // EVENTOS
-// =============================================loadMoreBtn.addEventListener('click', loadMore);
+// =============================================
+// Asegurar que el botón "Ver más" funcione correctamente
+loadMoreBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    loadMore();
+});
 
 // =============================================
 // INICIALIZAR
@@ -189,3 +214,4 @@ document.addEventListener('DOMContentLoaded', () => {
 console.log(`🌸 ${CONFIG.businessName} - Web cargada correctamente`);
 console.log(`📸 ${arreglos.length} arreglos florales disponibles`);
 console.log(`📋 Mostrando ${itemsPerPage} arreglos por carga`);
+console.log('✅ Botón "Ver más" funcionando correctamente');
