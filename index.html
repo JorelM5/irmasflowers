@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
     <title>Irmas Flowers</title>
     <link rel="stylesheet" href="style.css" />
     <!-- Font Awesome para los iconos -->
@@ -26,12 +26,18 @@
         </div>
     </header>
 
-    <!-- ===== HERO ===== -->
+    <!-- ===== HERO CON IMAGEN ===== -->
     <section class="hero">
-        <div class="container hero-content">
-            <h2>Flores frescas para cada momento</h2>
-            <p>Descubre nuestra colección de arreglos florales hechos con amor y dedicación.</p>
-            <p class="hero-location"><i class="fas fa-map-pin"></i> Sacramento, CA</p>
+        <div class="hero-image">
+            <img src="img/hero-irma.jpeg" alt="Irmas Flowers - Arreglos florales" />
+            <div class="hero-overlay">
+                <div class="hero-content">
+                    <h2>Flores frescas para cada momento</h2>
+                    <p>Descubre nuestra colección de arreglos florales hechos con amor y dedicación.</p>
+                    <p class="hero-location"><i class="fas fa-map-pin"></i> Sacramento, CA</p>
+                    <a href="#galeria" class="btn-hero">Ver arreglos <i class="fas fa-arrow-down"></i></a>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -39,14 +45,35 @@
     <section class="gallery" id="galeria">
         <div class="container">
             <h2 class="section-title">Nuestros Arreglos</h2>
-            <p class="section-subtitle">Haz clic en cualquier imagen para ver los detalles y hacer tu pedido</p>
-            <div class="gallery-grid" id="galleryGrid">
-                <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
+            <p class="section-subtitle">Desliza para ver todos nuestros arreglos. Toca cualquier imagen para seleccionarla.</p>
+            
+            <!-- Contenedor del Lightbox (carrusel táctil) -->
+            <div class="lightbox-container" id="lightboxContainer">
+                <div class="lightbox-track" id="lightboxTrack">
+                    <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
+                </div>
+                <!-- Indicadores de página -->
+                <div class="lightbox-indicators" id="lightboxIndicators"></div>
+                <!-- Flechas de navegación (para escritorio) -->
+                <button class="lightbox-arrow lightbox-arrow-prev" id="prevBtn" aria-label="Anterior">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="lightbox-arrow lightbox-arrow-next" id="nextBtn" aria-label="Siguiente">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <!-- Botón para seleccionar la imagen actual -->
+            <div class="selection-area">
+                <button class="btn btn-select" id="selectBtn">
+                    <i class="fas fa-check-circle"></i> Seleccionar este arreglo
+                </button>
+                <p class="selection-hint" id="selectionHint">Toca una imagen para seleccionarla</p>
             </div>
         </div>
     </section>
 
-    <!-- ===== MODAL ===== -->
+    <!-- ===== MODAL DE PAGO / PEDIDO ===== -->
     <div class="modal" id="modal">
         <div class="modal-content">
             <span class="modal-close" id="modalClose">&times;</span>
